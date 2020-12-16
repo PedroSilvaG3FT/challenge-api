@@ -14,6 +14,7 @@ export interface MenuItemInterface {
 }
 export interface MenuItemDayInterface {
     id?: number,
+    menuId: number,
     menuItemId: number,
     dayId: number,
     numberDay: number,

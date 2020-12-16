@@ -3,6 +3,10 @@ import Knex from 'knex';
 export async function up(knex: Knex) {
     return knex.schema.createTable('menu_item_day', table => {
         table.increments('id').primary();
+        table.integer('menuId')
+            .notNullable()
+            .references('id')
+            .inTable('menu');
         table.integer('menuItemId')
             .notNullable()
             .references('id')

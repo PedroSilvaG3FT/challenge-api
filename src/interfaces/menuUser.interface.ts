@@ -1,4 +1,4 @@
-import { MenuItemDayInterface } from "./menu.interface";
+import { MealInterface } from "./menu.interface";
 
 export interface MenuUserInterface {
     id?: number;
@@ -8,11 +8,17 @@ export interface MenuUserInterface {
     dateCreation: Date;
 }
 
-
 export interface MemberMenuInterface {
     menuId: number
     qtdDays: number
     menuName: string,
     menuMemberId: number,
-    days: MenuItemDayInterface[],
+    days: DayMenuInterface[],
+}
+
+interface DayMenuInterface {
+    dayId: number,
+    dayName: string,
+    numberDay: number,
+    meals: MealInterface[]
 }

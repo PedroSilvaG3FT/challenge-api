@@ -74,6 +74,7 @@ export default class MenuController {
                     newMenuItem.descripition = meal.descripition;
 
                     const insertedMenuItem = await trx('menu_item').insert(newMenuItem);
+                    newMenuItemDay.menuId = insertedMenu[0];
                     newMenuItemDay.menuItemId = insertedMenuItem[0];
 
                     await trx('menu_item_day').insert(newMenuItemDay);
