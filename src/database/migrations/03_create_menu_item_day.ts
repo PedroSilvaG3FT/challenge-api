@@ -9,7 +9,7 @@ export async function up(knex: Knex) {
             .inTable('menu_item');
         table.integer('dayId').notNullable();
         table.integer('numberDay').notNullable();
-        table.dateTime('dateCriation').notNullable();
+        table.dateTime('dateCreation').notNullable();
     });
 }
 

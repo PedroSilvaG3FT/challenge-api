@@ -9,7 +9,7 @@ export async function up(knex: Knex) {
             .inTable('menu');
         table.integer('typeMealId').notNullable();
         table.string('descripition').notNullable();
-        table.dateTime('dateCriation').notNullable();
+        table.dateTime('dateCreation').notNullable();
     });
 }
 

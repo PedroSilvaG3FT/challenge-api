@@ -12,7 +12,7 @@ export async function up(knex: Knex) {
             .references('id')
             .inTable('menu');
         table.boolean('active').notNullable();
-        table.dateTime('dateCriation').notNullable();
+        table.dateTime('dateCreation').notNullable();
     });
 }
 

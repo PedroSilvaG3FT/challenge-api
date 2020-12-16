@@ -8,10 +8,12 @@ export async function up(knex: Knex) {
         table.decimal('goalWeight', 3, 2);
         table.decimal('height', 3, 2);
         table.integer('payday');
-        table.boolean('acceptTerm');
+        table.boolean('isAdm');
         table.string('image');
+        table.boolean('acceptTerm');
+        table.integer('currentStep');
         table.boolean('active').notNullable();
-        table.dateTime('dateCriation').notNullable();
+        table.dateTime('dateCreation').notNullable();
     });
 }
 
