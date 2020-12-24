@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/src/server.js",
-    "build-ts": "tsc && knex:migrate",
+    "build-ts": "tsc && npm run migrate-hml",
     "postinstall": "npm run build-ts",
+    "migrate-hml": "knex migrate:latest --knexfile knexfile.js migrate:latest",
+
     "dev": "ts-node-dev src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
