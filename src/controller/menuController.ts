@@ -23,7 +23,15 @@ export default class MenuController {
     async getById(request: Request, response: Response) {
         try {
             const { id } = request.params;
-            const menu: MenuInterface = await knex('menu').where('id', id).select('*').first();
+
+            const trx = await knex.transaction();
+
+            const menu: MenuInterface = await trx('menu').where('id', id).select('*').first();
+            const menuItem = await trx('menu_item').where('menuId', id).select('*');
+            const menuItemDay = await trx('menu_item_day').where('menuId', id).select('*');
+
+            const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
+            const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
             return response.json(menu);
         } catch (error) {
@@ -31,12 +39,18 @@ export default class MenuController {
         }
     }
 
-    async remove(request: Request, response: Response) {
+    async disable(request: Request, response: Response) {
         try {
             const { id } = request.params;
-            await knex('menu').where('id', id).update({ active: false });
+            
+            const menuStatus = await knex('menu').where('id', id).select('active').first();
+            const newStatus = !menuStatus.active;
 
-            return response.json("Removido com sucesso");
+            await knex('menu').where('id', id).update({ active: newStatus });
+
+            return response.status(200).json(
+                { message: `Cardapio ${newStatus ? 'Habilitado' : 'Desabilitado'} com Sucesso` }
+            );
         } catch (error) {
             return response.send(error);
         }
@@ -83,7 +97,9 @@ export default class MenuController {
 
             });
 
-            return response.send("Criado com Sucesso")
+            return response.status(200).json(
+                { message: "Cardapio Criado com Sucesso" }
+            );
         } catch (error) {
             return response.send(error);
         }
@@ -105,7 +121,9 @@ export default class MenuController {
 
             console.log('MENU :', menu);
 
-            return response.send("Atualizado com Sucesso");
+            return response.status(200).json(
+                { message: "Cardapio Atualizado com Sucesso" }
+            );
         } catch (error) {
             return response.send(error);
 

@@ -24,7 +24,7 @@ routes.get('/menu/:id', menuController.getById);
 routes.get('/menu', menuController.getAll);
 routes.put('/menu', menuController.update);
 routes.post('/menu', menuController.create);
-routes.delete('/menu/:id', menuController.remove);
+routes.put('/menu/:id', menuController.disable);
 
 //MenuUser
 routes.get('/menuUser/:userId', menuUserController.getByUserId);
