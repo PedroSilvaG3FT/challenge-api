@@ -34,7 +34,7 @@ export default class UserController {
             
             const trx = await knex.transaction();
             data.dateCreation = new Date();
-
+            data.active = true;
             await trx('user').insert(data);
             await trx.commit();
 

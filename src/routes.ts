@@ -15,14 +15,14 @@ const menuUserController = new MenuUserController();
 
 routes.get('/', (request, response) => response.send("App Start"));
 
-//AUTH
+//AUTH 
 routes.post('/autentication', autenticationController.userAuth);
+routes.post('/user', userController.create);
 
 // MIDDLEAWERE
 routes.use(authMiddleware);
 
 //User
-routes.post('/user', userController.create);
 routes.put('/user', userController.update);
 routes.get('/user', userController.getAll);
 routes.get('/user/:id', userController.getById);
