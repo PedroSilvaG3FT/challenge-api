@@ -1,16 +1,25 @@
-import express, { request } from 'express';
+import express from 'express';
 
+import AutenticationController from './controller/autenticationController';
 import MenuController from './controller/menuController';
 import UserController from './controller/userController';
 import MenuUserController from './controller/menuUserController';
+import { authMiddleware } from './middlewares/middleware';
 
 const routes = express.Router();
 
+const autenticationController = new AutenticationController();
 const menuController = new MenuController();
 const userController = new UserController();
 const menuUserController = new MenuUserController();
 
 routes.get('/', (request, response) => response.send("App Start"));
+
+//AUTH
+routes.post('/autentication', autenticationController.userAuth);
+
+// MIDDLEAWERE
+routes.use(authMiddleware);
 
 //User
 routes.post('/user', userController.create);

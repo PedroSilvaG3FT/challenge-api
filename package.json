@@ -8,7 +8,6 @@
     "build-ts": "tsc && npm run migrate-hml",
     "postinstall": "npm run build-ts",
     "migrate-hml": "copyfiles src/database/**.sqlite dist/",
-
     "dev": "ts-node-dev src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
@@ -17,8 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/jsonwebtoken": "^8.5.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.13",
     "sqlite3": "^5.0.0"
   },

@@ -6,7 +6,6 @@ import {
     MenuItemInterface,
     MenuItemDayInterface,
 } from "../interfaces/menu.interface";
-
 export default class MenuController {
 
     constructor() { }

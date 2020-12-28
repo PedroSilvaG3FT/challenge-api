@@ -4,6 +4,8 @@ export async function up(knex: Knex) {
     return knex.schema.createTable('user', table => {
         table.increments('id').primary();
         table.string('name').notNullable();
+        table.string('email').notNullable();
+        table.string('password').notNullable();
         table.decimal('startingWeight', 3, 2);
         table.decimal('goalWeight', 3, 2);
         table.decimal('height', 3, 2);
