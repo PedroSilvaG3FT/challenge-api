@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import knex from "../database/connection";
 import jwt from 'jsonwebtoken';
-
-const authConfig = require('../config/auth.json');
-
+import { AUTH_CONFIG } from "../config/auth";
 export default class AutenticationController {
 
     constructor() { }
@@ -24,7 +22,7 @@ export default class AutenticationController {
                 return response.status(400).send("Usuário não encontrado na base")
             }
 
-            const token = jwt.sign({ id: userBd.id }, authConfig.secret, { expiresIn: authConfig.expiresIn });
+            const token = jwt.sign({ id: userBd.id }, AUTH_CONFIG.secret, { expiresIn: AUTH_CONFIG.expiresIn });
 
             await trx.commit();
             return response.json({ userBd, token })

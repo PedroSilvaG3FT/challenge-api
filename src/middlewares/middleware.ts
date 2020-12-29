@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { AUTH_CONFIG } from "../config/auth";
 import jwt from 'jsonwebtoken';
-
-const authConfig = require('../config/auth.json');
 
 export function authMiddleware(request: Request, response: Response, next: NextFunction) {
 
@@ -18,7 +17,7 @@ export function authMiddleware(request: Request, response: Response, next: NextF
 
     if (!/^Bearer$/i.test(scheme)) return response.status(401).send("Formato de token invalido");
 
-    jwt.verify(token, authConfig.secret, (err: any, decoded: any) => {
+    jwt.verify(token, AUTH_CONFIG.secret, (err: any, decoded: any) => {
         if (err) return response.status(401).send("Token invalido ou expirado");
 
         request.params.userId = decoded.id

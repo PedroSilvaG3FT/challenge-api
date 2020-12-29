@@ -20,7 +20,7 @@ routes.post('/autentication', autenticationController.userAuth);
 routes.post('/user', userController.create);
 
 // MIDDLEAWERE
-// routes.use(authMiddleware);
+routes.use(authMiddleware);
 
 //User
 routes.put('/user', userController.update);
