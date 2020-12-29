@@ -13,16 +13,16 @@ export default class MenuUserController {
         try {
             const { userId } = request.params;
 
-            const trx = await knex.transaction();
-            const menuUser = await trx('menu_user')
+            
+            const menuUser = await knex('menu_user')
                                    .where('userId', userId)
                                    .where('active', true)
                                    .select('*')
                                    .first();
 
-            const menu = await trx('menu').where('id', menuUser.menuId).select('*').first();
-            const menuItem = await trx('menu_item').where('menuId', menuUser.menuId).select('*');
-            const menuItemDay = await trx('menu_item_day').where('menuId', menuUser.menuId).select('*');
+            const menu = await knex('menu').where('id', menuUser.menuId).select('*').first();
+            const menuItem = await knex('menu_item').where('menuId', menuUser.menuId).select('*');
+            const menuItemDay = await knex('menu_item_day').where('menuId', menuUser.menuId).select('*');
 
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
@@ -65,8 +65,6 @@ export default class MenuUserController {
                     }
                 })
             });
-
-            await trx.commit();
 
             return response.json(menuMemberDTO);
         } catch (error) {

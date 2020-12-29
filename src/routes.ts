@@ -18,9 +18,9 @@ routes.get('/', (request, response) => response.send("App Start"));
 //AUTH 
 routes.post('/autentication', autenticationController.userAuth);
 routes.post('/user', userController.create);
-
+routes.get('/user/email/:email', userController.getByEmail);
 // MIDDLEAWERE
-routes.use(authMiddleware);
+// routes.use(authMiddleware);
 
 //User
 routes.put('/user', userController.update);

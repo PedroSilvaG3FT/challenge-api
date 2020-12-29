@@ -18,9 +18,22 @@ export default class UserController {
 
     async getById(request: Request, response: Response) {
         try {
+            console.log("OPA")
             const { id } = request.params;
 
             const user: UserInterface = await knex('user').where('id', id).select('*').first();
+
+            return response.json(user);
+        } catch (error) {
+            return response.send(error);
+        }
+    }
+
+    async getByEmail(request: Request, response: Response) {
+        try {
+            const { email } = request.params;
+
+            const user: UserInterface = await knex('user').where('email', email).select('*').first();
 
             return response.json(user);
         } catch (error) {
@@ -34,7 +47,7 @@ export default class UserController {
             
             const trx = await knex.transaction();
             data.dateCreation = new Date();
-            data.active = true;
+            data.active = false;
             await trx('user').insert(data);
             await trx.commit();
 
