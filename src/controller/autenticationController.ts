@@ -10,21 +10,17 @@ export default class AutenticationController {
         try {
             const { userName, password } = request.body;
 
-            const trx = await knex.transaction();
-
-            const userBd = await trx('user')
+            const userBd = await knex('user')
                 .where('name', userName)
                 .select('*')
                 .first();
 
             if (!userBd) {
-                await trx.commit();
                 return response.status(400).send("Usuário não encontrado na base")
             }
 
             const token = jwt.sign({ id: userBd.id }, AUTH_CONFIG.secret, { expiresIn: AUTH_CONFIG.expiresIn });
 
-            await trx.commit();
             return response.json({ userBd, token })
         } catch (error) {
             return response.send(error)
