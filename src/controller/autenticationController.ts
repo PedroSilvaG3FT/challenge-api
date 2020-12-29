@@ -27,7 +27,7 @@ export default class AutenticationController {
             await trx.commit();
             return response.json({ userBd, token })
         } catch (error) {
-
+            return response.send(error)
         }
     }
 
