@@ -55,6 +55,23 @@ export default class MenuController {
         }
     }
 
+    async delete(request: Request, response: Response) {
+        try {
+            const { id } = request.params;
+
+            await knex('menu').where('id', id).delete();
+            await knex('menu_item').where('menuId', id).delete();
+            await knex('menu_item_day').where('menuId', id).delete();
+            await knex('menu_user').where('menuId', id).delete();
+
+            return response.status(200).json(
+                { message: `Cardapio Removido com Sucesso` }
+            );
+        } catch (error) {
+            return response.send(error);
+        }
+    }
+
     async create(request: Request, response: Response) {
         try {
             const data: MenuInterfaceDTO = request.body;
@@ -128,4 +145,6 @@ export default class MenuController {
 
         }
     }
+
+
 }

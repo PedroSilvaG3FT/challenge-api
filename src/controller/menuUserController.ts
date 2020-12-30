@@ -13,12 +13,11 @@ export default class MenuUserController {
         try {
             const { userId } = request.params;
 
-            
             const menuUser = await knex('menu_user')
-                                   .where('userId', userId)
-                                   .where('active', true)
-                                   .select('*')
-                                   .first();
+                .where('userId', userId)
+                .where('active', true)
+                .select('*')
+                .first();
 
             const menu = await knex('menu').where('id', menuUser.menuId).select('*').first();
             const menuItem = await knex('menu_item').where('menuId', menuUser.menuId).select('*');
@@ -34,13 +33,13 @@ export default class MenuUserController {
                 menuMemberId: menuUser.id,
                 days: []
             }
-            
+
             numberDayFilter.forEach(numberDay => {
                 const day = menuItemDay.filter(itemDay => itemDay.numberDay === numberDay)[0];
-
+                console.log(day)
                 const newDay = {
-                    dayId: day.idDay,
-                    dayName: DayEnum[day.idDay],
+                    dayId: day.dayId,
+                    dayName: DayEnum[day.dayId],
                     numberDay: day.numberDay,
                     meals: [] as MealInterface[]
                 }
@@ -89,10 +88,10 @@ export default class MenuUserController {
             await trx('menu_user').insert(data);
             trx.commit();
 
-            return response.send("Menu Atribuido com sucesso");
+            return response.json({ message: "Menu Atribuido com sucesso" });
 
         } catch (error) {
-            response.send(error);
+            response.json({message: error || "ERRO"});
         }
     }
 }

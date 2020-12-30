@@ -4,7 +4,7 @@ import { UserInterface } from "../interfaces/user.interface";
 
 export default class UserController {
 
-    constructor() {}
+    constructor() { }
 
     async getAll(request: Request, response: Response) {
         try {
@@ -12,7 +12,7 @@ export default class UserController {
 
             return response.json(userList);
         } catch (error) {
-            return response.send(error);
+            return response.json({ message: error });
         }
     }
 
@@ -25,7 +25,7 @@ export default class UserController {
 
             return response.json(user);
         } catch (error) {
-            return response.send(error);
+            return response.json({ message: error });
         }
     }
 
@@ -36,24 +36,23 @@ export default class UserController {
 
             return response.json(user);
         } catch (error) {
-            return response.send(error);
+            return response.json({ message: error });
         }
     }
 
     async create(request: Request, response: Response) {
         try {
             const data: UserInterface = request.body;
-            
+
             const trx = await knex.transaction();
             data.dateCreation = new Date();
             data.active = false;
-            console.log("NEW USER :", data);
             await trx('user').insert(data);
             await trx.commit();
 
-            return response.send(`Usuário : ${data.name} criado com sucesso`)
+            return response.json({ message: `Usuário : ${data.name} criado com sucesso` })
         } catch (error) {
-            return response.send(error || "Erro");
+            return response.json({ message: error || "Erro" });
         }
     }
 
@@ -65,9 +64,9 @@ export default class UserController {
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
-            return response.send(`Usuário : ${data.name} atualizado com sucesso`)
+            return response.json({ message: `Usuário : ${data.name} atualizado com sucesso` })
         } catch (error) {
-            return response.send(error || "Erro");
+            return response.json({ message: error });
         }
     }
 
@@ -75,10 +74,10 @@ export default class UserController {
         try {
             const { id } = request.params;
 
-            await knex('user').where('id', id).update({active: false});
-            return response.send(`Usuário removido com sucesso`)
+            await knex('user').where('id', id).update({ active: false });
+            return response.json({ message: `Usuário removido com sucesso` })
         } catch (error) {
-            return response.send(error || "Erro");
+            return response.json({ message: error });
         }
     }
 
