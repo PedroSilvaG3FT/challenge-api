@@ -6,6 +6,10 @@ export async function up(knex: Knex) {
         table.string('name').notNullable();
         table.string('email').notNullable();
         table.string('password').notNullable();
+        table.string('cpf').notNullable();
+        table.integer('age').notNullable();
+        table.string('comments');
+        table.integer('phoneNumber');
         table.decimal('startingWeight', 3, 2);
         table.decimal('goalWeight', 3, 2);
         table.decimal('height', 3, 2);

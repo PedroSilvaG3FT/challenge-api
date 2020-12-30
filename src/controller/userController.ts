@@ -32,7 +32,6 @@ export default class UserController {
     async getByEmail(request: Request, response: Response) {
         try {
             const { email } = request.params;
-
             const user: UserInterface = await knex('user').where('email', email).select('*').first();
 
             return response.json(user);
@@ -48,6 +47,7 @@ export default class UserController {
             const trx = await knex.transaction();
             data.dateCreation = new Date();
             data.active = false;
+            console.log("NEW USER :", data);
             await trx('user').insert(data);
             await trx.commit();
 
