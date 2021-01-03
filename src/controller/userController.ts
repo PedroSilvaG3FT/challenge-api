@@ -18,7 +18,6 @@ export default class UserController {
 
     async getById(request: Request, response: Response) {
         try {
-            console.log("OPA")
             const { id } = request.params;
 
             const user: UserInterface = await knex('user').where('id', id).select('*').first();

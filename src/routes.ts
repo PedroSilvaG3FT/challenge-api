@@ -5,6 +5,7 @@ import MenuController from './controller/menuController';
 import UserController from './controller/userController';
 import MenuUserController from './controller/menuUserController';
 import { authMiddleware } from './middlewares/middleware';
+import ExerciceController from './controller/exerciceController';
 
 const routes = express.Router();
 
@@ -12,6 +13,8 @@ const autenticationController = new AutenticationController();
 const menuController = new MenuController();
 const userController = new UserController();
 const menuUserController = new MenuUserController();
+
+const exerciceController = new ExerciceController();
 
 routes.get('/', (request, response) => response.send("App Start"));
 
@@ -40,5 +43,8 @@ routes.delete('/menu/:id', menuController.delete);
 //MenuUser
 routes.get('/menuUser/:userId', menuUserController.getByUserId);
 routes.post('/menuUser', menuUserController.create);
+
+//EXERCICE
+routes.post('/exercice', exerciceController.create);
 
 export default routes;
