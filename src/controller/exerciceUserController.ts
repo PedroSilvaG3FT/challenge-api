@@ -18,7 +18,6 @@ export default class ExerciceUserController {
                 .where('userId', userId)
                 .select('*');
 
-            console.log(exerciceUserDayItems)
             const numberDays = exerciceUserDays.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
@@ -66,7 +65,6 @@ export default class ExerciceUserController {
 
         try {
             const data: ExerciceUserInterfaceDTO = request.body;
-            console.log("USER ID :", data.userId);
 
             await trx('exercice_user_day').where('userId', data.userId).delete();
             await trx('exercice_user_day_item').where('userId', data.userId).delete();
@@ -78,6 +76,11 @@ export default class ExerciceUserController {
                     active: true,
                     numberDay: index + 1,
                     dateCreation: new Date()
+                }
+
+                if (!day.exercices.length) {
+                    await trx('exercice_user_day').insert(newExerciceDay);
+                    return;
                 }
 
                 day.exercices.forEach(async (exercice) => {
