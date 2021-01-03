@@ -6,7 +6,7 @@ export default class ExerciceController {
     
     async getAll(request: Request, response: Response) {
         try {
-            const exerciceList: ExerciceInterface[] = await knex('user').select('*');
+            const exerciceList: ExerciceInterface[] = await knex('exercice').select('*');
 
             return response.json(exerciceList);
         } catch (error) {
@@ -17,7 +17,7 @@ export default class ExerciceController {
     async getById(request: Request, response: Response) {
         try {
             const { id } = request.params;
-
+            console.log
             const exercice: ExerciceInterface = await knex('exercice').where('id', id).select('*').first();
 
             return response.json(exercice);

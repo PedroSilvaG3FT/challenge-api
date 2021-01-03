@@ -45,6 +45,10 @@ routes.get('/menuUser/:userId', menuUserController.getByUserId);
 routes.post('/menuUser', menuUserController.create);
 
 //EXERCICE
+routes.get('/exercice', exerciceController.getAll);
 routes.post('/exercice', exerciceController.create);
+routes.put('/exercice/:id', exerciceController.update);
+routes.get('/exercice/:id', exerciceController.getById);
+routes.delete('/exercice/:id', exerciceController.remove);
 
 export default routes;
