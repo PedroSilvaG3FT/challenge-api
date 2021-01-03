@@ -10,13 +10,11 @@ export default class AutenticationController {
         try {
             const { email, password } = request.body;
 
-            console.log(email)
             const user = await knex('user')
                 .where('email', email)
                 .select('*')
                 .first();
 
-            console.log(user);
 
             if (!user) {
                 return response.status(400).json({message:"Usuário não encontrado na base"})

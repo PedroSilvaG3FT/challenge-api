@@ -135,8 +135,6 @@ export default class MenuController {
                 await trx('menu').update(menu)
             }
 
-            console.log('MENU :', menu);
-
             return response.status(200).json(
                 { message: "Cardapio Atualizado com Sucesso" }
             );

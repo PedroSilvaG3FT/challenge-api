@@ -6,6 +6,7 @@ import UserController from './controller/userController';
 import MenuUserController from './controller/menuUserController';
 import { authMiddleware } from './middlewares/middleware';
 import ExerciceController from './controller/exerciceController';
+import ExerciceUserController from './controller/exerciceUserController';
 
 const routes = express.Router();
 
@@ -15,6 +16,7 @@ const userController = new UserController();
 const menuUserController = new MenuUserController();
 
 const exerciceController = new ExerciceController();
+const exerciceUserController = new ExerciceUserController();
 
 routes.get('/', (request, response) => response.send("App Start"));
 
@@ -49,6 +51,12 @@ routes.get('/exercice', exerciceController.getAll);
 routes.post('/exercice', exerciceController.create);
 routes.put('/exercice/:id', exerciceController.update);
 routes.get('/exercice/:id', exerciceController.getById);
+routes.get('/exerciceByName', exerciceController.getByName);
 routes.delete('/exercice/:id', exerciceController.remove);
+
+
+//EXERCICE_USER
+routes.post('/exerciceUser', exerciceUserController.create);
+routes.get('/exerciceUser/:userId', exerciceUserController.getByUserId);
 
 export default routes;

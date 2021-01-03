@@ -17,10 +17,20 @@ export default class ExerciceController {
     async getById(request: Request, response: Response) {
         try {
             const { id } = request.params;
-            console.log
             const exercice: ExerciceInterface = await knex('exercice').where('id', id).select('*').first();
 
             return response.json(exercice);
+        } catch (error) {
+            return response.json({ message: error });
+        }
+    }
+
+    async getByName(request: Request, response: Response) {
+        try {
+            const { name } = request.query;
+            const exercices: ExerciceInterface[] = await knex('exercice').where('name', 'like', `%${name}%`).select('*');
+
+            return response.json(exercices);
         } catch (error) {
             return response.json({ message: error });
         }
@@ -33,11 +43,13 @@ export default class ExerciceController {
             const trx = await knex.transaction();
             data.dateCreation = new Date();
             data.active = true;
-            await trx('exercice').insert(data);
+            const newExerciceId = await trx('exercice').insert(data);
             await trx.commit();
-            console.log(data);
 
-            return response.json({ message: `Exercicio : ${data.name} criado com sucesso` })
+            return response.json({ 
+                newExerciceId: newExerciceId[0],
+                message: `Exercicio : ${data.name} criado com sucesso` 
+            })
         } catch (error) {
             return response.json({ message: error || "Erro" });
         }

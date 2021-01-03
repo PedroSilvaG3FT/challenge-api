@@ -36,7 +36,6 @@ export default class MenuUserController {
 
             numberDayFilter.forEach(numberDay => {
                 const day = menuItemDay.filter(itemDay => itemDay.numberDay === numberDay)[0];
-                console.log(day)
                 const newDay = {
                     dayId: day.dayId,
                     dayName: DayEnum[day.dayId],

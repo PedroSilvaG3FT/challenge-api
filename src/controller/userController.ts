@@ -40,10 +40,11 @@ export default class UserController {
     }
 
     async create(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: UserInterface = request.body;
 
-            const trx = await knex.transaction();
             data.dateCreation = new Date();
             data.active = false;
             await trx('user').insert(data);
@@ -51,6 +52,8 @@ export default class UserController {
 
             return response.json({ message: `Usuário : ${data.name} criado com sucesso` })
         } catch (error) {
+            await trx.commit();
+
             return response.json({ message: error || "Erro" });
         }
     }
