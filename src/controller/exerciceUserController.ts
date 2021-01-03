@@ -60,6 +60,19 @@ export default class ExerciceUserController {
         }
     }
 
+    async removeAllByUserId(request: Request, response: Response) {
+        try {
+            const { userId } = request.params;
+            
+            await knex('exercice_user_day').where('userId', userId).delete();
+            await knex('exercice_user_day_item').where('userId', userId).delete();
+            
+            return response.json({message : "Exercicos removidos com sucesso"});
+        } catch (error) {
+            response.send(error);
+        }
+    }
+
     async create(request: Request, response: Response) {
         const trx = await knex.transaction();
 
