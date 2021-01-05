@@ -9,6 +9,7 @@ export interface UserInterface {
     phoneNumber?: number;
     startingWeight?: number;
     goalWeight?: number;
+    goalWeek?: number;
     height?: number;
     payday?: number;
     isAdm?: boolean;
@@ -17,4 +18,6 @@ export interface UserInterface {
     currentStep?: number;
     active: boolean;
     dateCreation: Date;
+
+    currentWeight?: number;
 }

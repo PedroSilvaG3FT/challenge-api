@@ -17,7 +17,7 @@ export default class AutenticationController {
 
 
             if (!user) {
-                return response.status(400).json({message:"Usuário não encontrado na base"})
+                return response.json({message:"Usuário não encontrado na base"})
             }
 
             const token = jwt.sign({ id: user.id }, AUTH_CONFIG.secret, { expiresIn: AUTH_CONFIG.expiresIn });

@@ -1,6 +1,7 @@
 import knex from "../database/connection";
 import { Request, Response } from "express";
 import { UserInterface } from "../interfaces/user.interface";
+import { UserWeightInterface } from "../interfaces/userWeight.interface";
 
 export default class UserController {
 
@@ -21,6 +22,14 @@ export default class UserController {
             const { id } = request.params;
 
             const user: UserInterface = await knex('user').where('id', id).select('*').first();
+            const userWeight: UserWeightInterface = await 
+                knex('user_weight')
+                .where('userId', id)
+                .where('active', true)
+                .select('*')
+                .first();
+
+            user.currentWeight = userWeight ? userWeight.weight : 0;
 
             return response.json(user);
         } catch (error) {
