@@ -68,15 +68,17 @@ export default class UserController {
     }
 
     async update(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: UserInterface = request.body;
-
-            const trx = await knex.transaction();
+            console.log(data);
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
             return response.json({ message: `Usuário : ${data.name} atualizado com sucesso` })
         } catch (error) {
+            await trx.commit();
             return response.json({ message: error });
         }
     }
