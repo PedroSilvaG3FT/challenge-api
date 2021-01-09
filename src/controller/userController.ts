@@ -2,13 +2,22 @@ import knex from "../database/connection";
 import { Request, Response } from "express";
 import { UserInterface } from "../interfaces/user.interface";
 import { UserWeightInterface } from "../interfaces/userWeight.interface";
-import { _decrypt, _encrypt } from "../shared/cryptoHelper/cryptoHelper";
+import { _decrypt, _encrypt, _hash, _verify } from "../shared/cryptoHelper/cryptoHelper";
+
 export default class UserController {
     constructor() { }
 
     async getAll(request: Request, response: Response) {
         try {
-            const userList: UserInterface[] = await knex('user').select('*');
+            const { active, isAdm } = request.query;
+
+            const activeFilter = (active === undefined) ? true : (active == 'true');
+            const isAdmFilter = (isAdm === undefined) ? null : (isAdm == 'true');
+
+            const userList: UserInterface[] = await knex('user')
+                .where('active', activeFilter)
+                .where('isAdm', isAdmFilter)
+                .select('*');
             const userWeightList: UserWeightInterface[] = await knex('user_weight').where('active', true).select('*');
 
             userList.forEach(user => {
@@ -61,14 +70,22 @@ export default class UserController {
 
     async create(request: Request, response: Response) {
         const trx = await knex.transaction();
+
         try {
             const data: UserInterface = request.body;
-            
+            const userExist: UserInterface = await trx('user').where('email', data.email).select('*').first();
+
+            if (userExist) {
+                await trx.commit();
+                return response.status(400).json({message: 'Email já cadastrado na base'})
+            }
+
             data.dateCreation = new Date();
             data.active = data.isAdm ? true : false;
+            data.isAdm = data.isAdm ? data.isAdm : false;
             
-            const hash = await _encrypt(data.password as string);
-            data.password = hash;
+            const hash = await _hash(data.password as string);
+            data.password = hash as string;
 
             await trx('user').insert(data);
             await trx.commit();

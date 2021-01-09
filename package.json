@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/src/server.js",
-    "build-ts": "tsc && npm run migrate-hml",
-    "postinstall": "npm run build-ts",
-    "migrate-hml": "copyfiles src/database/**.sqlite dist/",
     "dev": "ts-node-dev src/server.ts",
+    "postinstall": "npm run build-ts",
+    "build-ts": "tsc && npm run migrate-hml",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate-hml": "copyfiles src/database/**.sqlite dist/ && npm run knex:seed",
+    "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
   },
   "keywords": [],
