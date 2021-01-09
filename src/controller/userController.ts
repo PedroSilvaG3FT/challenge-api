@@ -2,15 +2,25 @@ import knex from "../database/connection";
 import { Request, Response } from "express";
 import { UserInterface } from "../interfaces/user.interface";
 import { UserWeightInterface } from "../interfaces/userWeight.interface";
-
+import { _decrypt, _encrypt } from "../shared/cryptoHelper/cryptoHelper";
 export default class UserController {
-
     constructor() { }
 
     async getAll(request: Request, response: Response) {
         try {
             const userList: UserInterface[] = await knex('user').select('*');
+            const userWeightList: UserWeightInterface[] = await knex('user_weight').where('active', true).select('*');
 
+            userList.forEach(user => {
+                user.password = undefined;
+
+                userWeightList.forEach(userWeight => {
+                    if(user.id === userWeight.userId) {
+                        user.currentWeight = userWeight.weight;
+                    }
+                });
+            })
+            
             return response.json(userList);
         } catch (error) {
             return response.json({ message: error });
@@ -22,15 +32,16 @@ export default class UserController {
             const { id } = request.params;
 
             const user: UserInterface = await knex('user').where('id', id).select('*').first();
-            const userWeight: UserWeightInterface = await 
+            const userWeight: UserWeightInterface = await
                 knex('user_weight')
-                .where('userId', id)
-                .where('active', true)
-                .select('*')
-                .first();
+                    .where('userId', id)
+                    .where('active', true)
+                    .select('*')
+                    .first();
 
             user.currentWeight = userWeight ? userWeight.weight : 0;
-
+            user.password = undefined;
+            
             return response.json(user);
         } catch (error) {
             return response.json({ message: error });
@@ -50,12 +61,15 @@ export default class UserController {
 
     async create(request: Request, response: Response) {
         const trx = await knex.transaction();
-
         try {
             const data: UserInterface = request.body;
-
+            
             data.dateCreation = new Date();
-            data.active = false;
+            data.active = data.isAdm ? true : false;
+            
+            const hash = await _encrypt(data.password as string);
+            data.password = hash;
+
             await trx('user').insert(data);
             await trx.commit();
 

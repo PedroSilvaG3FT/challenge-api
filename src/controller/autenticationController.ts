@@ -17,12 +17,12 @@ export default class AutenticationController {
 
 
             if (!user) {
-                return response.json({message:"Usuário não encontrado na base"})
+                return response.status(404).json({message:"Usuário não encontrado na base"})
             }
 
             const token = jwt.sign({ id: user.id }, AUTH_CONFIG.secret, { expiresIn: AUTH_CONFIG.expiresIn });
 
-            return response.json({ user, token })
+            return response.status(200).json({ user, token })
         } catch (error) {
             return response.json({message: "ERRO"||error})
         }
