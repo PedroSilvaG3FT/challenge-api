@@ -12,7 +12,7 @@ export default class UserController {
             const { active, isAdm } = request.query;
 
             const activeFilter = (active === undefined) ? true : (active == 'true');
-            const isAdmFilter = (isAdm === undefined) ? null : (isAdm == 'true');
+            const isAdmFilter = (isAdm === undefined) ? false : (isAdm == 'true');
 
             const userList: UserInterface[] = await knex('user')
                 .where('active', activeFilter)

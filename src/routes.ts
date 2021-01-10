@@ -46,8 +46,9 @@ routes.put('/menu/:id', menuController.disable);
 routes.delete('/menu/:id', menuController.delete);
 
 //MenuUser
-routes.get('/menuUser/:userId', menuUserController.getByUserId);
 routes.post('/menuUser', menuUserController.create);
+routes.get('/menuUser/:userId', menuUserController.getByUserId);
+routes.put('/menuUser/menuItemImage', menuUserController.updateImageItem);
 
 //EXERCICE
 routes.get('/exercice', exerciceController.getAll);

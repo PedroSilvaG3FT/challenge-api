@@ -1,4 +1,5 @@
 import Knex from 'knex';
+import { VARCHAR_MAX } from '../constants';
 
 export async function up(knex: Knex) {
     return knex.schema.createTable('user', table => {
@@ -16,9 +17,8 @@ export async function up(knex: Knex) {
         table.decimal('height', 3, 2);
         table.integer('payday');
         table.boolean('isAdm');
-        table.string('image');
+        table.string('image', VARCHAR_MAX);
         table.boolean('acceptTerm');
-        table.integer('currentStep');
         table.boolean('active').notNullable();
         table.dateTime('dateCreation').notNullable();
     });

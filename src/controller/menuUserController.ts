@@ -1,7 +1,7 @@
 import knex from "../database/connection";
 import { Request, Response } from "express";
 import { MemberMenuInterface, MenuUserInterface } from "../interfaces/menuUser.interface";
-import { MealInterface } from "../interfaces/menu.interface";
+import { MealInterface, MenuItemInterface } from "../interfaces/menu.interface";
 import { TypeMealEnum } from "../shared/enums/typeMeal.enum";
 import { DayEnum } from "../shared/enums/day.enum";
 
@@ -54,9 +54,11 @@ export default class MenuUserController {
                         const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
 
                         const newMeal = {
+                            menuItemId: meal.id,
                             typeMealName: TypeMealEnum[meal.typeMealId],
                             typeMealId: meal.typeMealId,
                             descripition: meal.descripition,
+                            imageItem: meal.imageItem
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
@@ -92,5 +94,27 @@ export default class MenuUserController {
         } catch (error) {
             response.json({message: error || "ERRO"});
         }
+    }
+
+    async updateImageItem(request: Request, response: Response) {
+        // const trx = await knex.transaction();
+        console.log(request);
+        return response.send("TESTANDO");
+
+        // try {
+        //     const data: any = request.body;
+        //     console.log('Data', data);
+
+        //     await trx('menu_item')
+        //         .where('id', data.menuItemId)
+        //         .update(data)
+            
+        //     await trx.commit();
+
+        //     return response.json({ message: "Item atualizado com sucesso" });
+        // } catch (error) {
+        //     await trx.commit();
+        //     return response.json({ message: "DEU RUIM" });
+        // }
     }
 }

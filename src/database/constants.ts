@@ -1,0 +1,1 @@
+export const VARCHAR_MAX = 1073741824;
