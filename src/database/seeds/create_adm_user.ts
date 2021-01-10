@@ -5,6 +5,7 @@ export async function seed(knex: Knex) {
     const user: UserInterface = {
         isAdm: true,
         active: true,
+        age: 0,
         cpf: "",
         dateCreation: new Date(),
 
