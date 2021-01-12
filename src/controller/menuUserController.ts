@@ -58,7 +58,8 @@ export default class MenuUserController {
                             typeMealName: TypeMealEnum[meal.typeMealId],
                             typeMealId: meal.typeMealId,
                             descripition: meal.descripition,
-                            imageItem: meal.imageItem
+                            imageItem: meal.imageItem,
+                            rating: meal.rating
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
@@ -97,24 +98,40 @@ export default class MenuUserController {
     }
 
     async updateImageItem(request: Request, response: Response) {
-        // const trx = await knex.transaction();
-        console.log(request);
-        return response.send("TESTANDO");
+        const trx = await knex.transaction();
 
-        // try {
-        //     const data: any = request.body;
-        //     console.log('Data', data);
+        try {
+            const data: any = request.body;
 
-        //     await trx('menu_item')
-        //         .where('id', data.menuItemId)
-        //         .update(data)
+            await trx('menu_item')
+                .where('id', data.menuItemId)
+                .update({ imageItem: data.image64})
             
-        //     await trx.commit();
+            await trx.commit();
 
-        //     return response.json({ message: "Item atualizado com sucesso" });
-        // } catch (error) {
-        //     await trx.commit();
-        //     return response.json({ message: "DEU RUIM" });
-        // }
+            return response.json({ message: "Item atualizado com sucesso" });
+        } catch (error) {
+            await trx.commit();
+            return response.json({ message: "DEU RUIM" });
+        }
+    }
+
+    async updateRatingItem(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
+        try {
+            const data: any = request.body;
+
+            await trx('menu_item')
+                .where('id', data.menuItemId)
+                .update({ imageItem: data.image64 })
+
+            await trx.commit();
+
+            return response.json({ message: "Item atualizado com sucesso" });
+        } catch (error) {
+            await trx.commit();
+            return response.json({ message: "DEU RUIM" });
+        }
     }
 }

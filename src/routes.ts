@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 
 import AutenticationController from './controller/autenticationController';
 import MenuController from './controller/menuController';
