@@ -6,7 +6,9 @@
   "scripts": {
     "start": "npm install && tsc && node dist/src/server.js",
     "dev": "ts-node-dev src/server.ts",
-
+    "postinstall": "npm run build-ts",
+    "knex:seed": "knex --knexfile knexfile.ts seed:run",
+    "build-ts": "tsc && npm run knex:migrate && npm run migrate-hml",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest",
     "migrate-hml": "copyfiles src/database/**.sqlite dist/ && npm run knex:seed"
   },
