@@ -3,10 +3,10 @@ import knex from 'knex';
 const connection = knex({
     client: 'mysql',
     connection: {
-        host: 'challenge90.mysql.database.azure.com',
-        user: 'challenge@challenge90',
+        host: 'mysql742.umbler.com',
+        user: 'challenge90-sa',
         password: 'Laranja10',
-        database: 'challenge90-dev'
+        database: 'challenge90-bd'
     }
 });
 
