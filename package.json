@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/src/server.js",
+    "start": "ts-node src/server.ts",
     "dev": "ts-node-dev src/server.ts",
     "postinstall": "npm run build-ts",
     "build-ts": "tsc && npm run knex:migrate && npm run knex:seed",
