@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node dist/src/server.js",
     "dev": "ts-node-dev src/server.ts",
     "postinstall": "npm run build-ts",
-    "build-ts": "tsc && npm run knex:migrate && npm run knex:seed",
+    "build-ts": "tsc && npm run start && npm run knex:migrate && npm run knex:seed",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "migrate-hml": "copyfiles src/database/**.sqlite dist/ && npm run knex:seed",
     "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
@@ -22,7 +23,6 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.13",
-    "mysql": "^2.18.1",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
