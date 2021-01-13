@@ -11,9 +11,9 @@ const connection = knex({
     client: 'mysql',
     connection: {
         host: 'mysql742.umbler.com',
-        user: 'test-sa',
+        user: 'challenge90-sa',
         password: 'Laranja10',
-        database: 'challenge-bd-tes'
+        database: 'challenge90-bd'
     }
 });
 
