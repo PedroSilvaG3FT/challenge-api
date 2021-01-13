@@ -3,10 +3,7 @@ import Knex from 'knex';
 export async function up(knex: Knex) {
     return knex.schema.createTable('user_weight', table => {
         table.increments('id').primary();
-        table.integer('userId')
-            .notNullable()
-            .references('id')
-            .inTable('user');
+        table.integer('userId').unsigned().references('id').inTable('user').notNullable();
         table.integer('weight').notNullable();
         table.boolean('active').notNullable();
         table.dateTime('dateCreation').notNullable();

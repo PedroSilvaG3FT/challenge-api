@@ -5,9 +5,10 @@ export async function up(knex: Knex) {
     return knex.schema.createTable('menu_item', table => {
         table.increments('id').primary();
         table.integer('menuId')
-            .notNullable()
+            .unsigned()
             .references('id')
-            .inTable('menu');
+            .inTable('menu')
+            .notNullable();
         table.integer('rating');
         table.integer('typeMealId').notNullable();
         table.string('imageItem', VARCHAR_MAX);
