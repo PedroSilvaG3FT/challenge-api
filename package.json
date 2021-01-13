@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/src/server.js",
+    "build": "tsc",
+    "start": "npm build && node dist/src/index.js",
+
     "dev": "ts-node-dev src/server.ts",
-    "postinstall": "npm run build-ts",
+    "postinstall": "npm run build",
     "build-ts": "tsc && npm run start && npm run knex:migrate && npm run knex:seed",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate-hml": "copyfiles src/database/**.sqlite dist/ && npm run knex:seed",
