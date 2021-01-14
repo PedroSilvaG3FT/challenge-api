@@ -22,7 +22,8 @@ const exerciceUserController = new ExerciceUserController();
 const userWeightController = new UserWeightController();
 
 routes.get('/', (request, response) => response.send("Challenge 90 Start"));
-console.log("Challenge 90 Start 1")
+console.log("Challenge 90 Start 2");
+console.log("____________________________________________________________");
 
 //AUTH 
 routes.post('/autentication', autenticationController.userAuth);
