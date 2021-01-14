@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/src/server.js npm run knex:migrate && npm run knex:seed",
+    "start": "npm run build && node dist/src/server.js && npm run knex:migrate && npm run knex:seed",
     "dev": "ts-node-dev src/server.ts",
     "publish": "git push umbler master",
     "build-ts": "tsc && npm run knex:migrate && npm run knex:seed",
