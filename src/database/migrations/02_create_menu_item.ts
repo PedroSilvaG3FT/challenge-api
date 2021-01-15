@@ -9,9 +9,7 @@ export async function up(knex: Knex) {
             .references('id')
             .inTable('menu')
             .notNullable();
-        table.integer('rating');
         table.integer('typeMealId').notNullable();
-        table.string('imageItem', VARCHAR_MAX);
         table.string('descripition').notNullable();
         table.dateTime('dateCreation').notNullable();
     });

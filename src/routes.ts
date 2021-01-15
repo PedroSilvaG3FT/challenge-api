@@ -56,7 +56,7 @@ routes.delete('/menuItem/:id', menuItemController.delete);
 //MENU_USER
 routes.post('/menuUser', menuUserController.create);
 routes.get('/menuUser/:userId', menuUserController.getByUserId);
-routes.put('/menuUser/menuItemImage', menuUserController.updateImageItem);
+routes.post('/menuUser/menuItemImage', menuUserController.createImageItem);
 
 //EXERCICE
 routes.get('/exercice', exerciceController.getAll);

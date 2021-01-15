@@ -97,16 +97,24 @@ export default class MenuUserController {
         }
     }
 
-    async updateImageItem(request: Request, response: Response) {
+    async createImageItem(request: Request, response: Response) {
         const trx = await knex.transaction();
 
         try {
             const data: any = request.body;
-
-            await trx('menu_item')
-                .where('id', data.menuItemId)
-                .update({ imageItem: data.image64})
             
+            await trx('menu_user_item_image')
+                .where('menuItemId', data.menuItemId)
+                .delete();
+
+            const newImageItem = {
+                userId: data.userId,
+                menuItemId: data.menuItemId,
+                image: data.image64,
+                dateCreation: new Date()
+            }
+
+            await trx('menu_user_item_image').insert(newImageItem)
             await trx.commit();
 
             return response.json({ message: "Item atualizado com sucesso" });
