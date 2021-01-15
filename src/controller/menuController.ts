@@ -5,7 +5,10 @@ import {
     MenuInterfaceDTO,
     MenuItemInterface,
     MenuItemDayInterface,
+    MealInterface,
 } from "../interfaces/menu.interface";
+import { DayEnum } from '../shared/enums/day.enum';
+import { TypeMealEnum } from '../shared/enums/typeMeal.enum';
 export default class MenuController {
 
     constructor() { }
@@ -23,16 +26,52 @@ export default class MenuController {
         try {
             const { id } = request.params;
 
-            const trx = await knex.transaction();
-
-            const menu: MenuInterface = await trx('menu').where('id', id).select('*').first();
-            const menuItem = await trx('menu_item').where('menuId', id).select('*');
-            const menuItemDay = await trx('menu_item_day').where('menuId', id).select('*');
+            const menu = await knex('menu').where('id', id).select('*').first();
+            const menuItem = await knex('menu_item').where('menuId', id).select('*');
+            const menuItemDay = await knex('menu_item_day').where('menuId', id).select('*');
 
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
-            return response.json(menu);
+            const menuDTO: any = {
+                id: menu.id,
+                name: menu.name,
+                qtdDays: menu.qtdDays,
+                days: []
+            }
+
+            numberDayFilter.forEach(numberDay => {
+                const day = menuItemDay.filter(itemDay => itemDay.numberDay === numberDay)[0];
+                const newDay = {
+                    dayId: day.dayId,
+                    name: DayEnum[day.dayId],
+                    numberDay: day.numberDay,
+                    meals: [] as MealInterface[]
+                }
+
+                menuDTO.days.push(newDay);
+            });
+
+            menuDTO.days.forEach((itemDay: any) => {
+                const mealsDay = menuItemDay.filter(x => itemDay.numberDay === x.numberDay);
+
+                mealsDay.forEach(mealtem => {
+                    if (itemDay.numberDay === mealtem.numberDay) {
+                        const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
+
+                        const newMeal = {
+                            id: meal.id,
+                            name: TypeMealEnum[meal.typeMealId],
+                            typeMealId: meal.typeMealId,
+                            descripition: meal.descripition,
+                        }
+
+                        itemDay.meals.push(newMeal)
+                    }
+                })
+            });
+
+            return response.json(menuDTO);
         } catch (error) {
             return response.send(error);
         }
