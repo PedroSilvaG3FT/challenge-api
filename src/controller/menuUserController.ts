@@ -12,7 +12,7 @@ export default class MenuUserController {
     async getByUserId(request: Request, response: Response) {
         try {
             const { userId } = request.params;
-
+            console.log("USER ID ", userId);
             const menuUser = await knex('menu_user')
                 .where('userId', userId)
                 .where('active', true)
@@ -22,7 +22,9 @@ export default class MenuUserController {
             const menu = await knex('menu').where('id', menuUser.menuId).select('*').first();
             const menuItem = await knex('menu_item').where('menuId', menuUser.menuId).select('*');
             const menuItemDay = await knex('menu_item_day').where('menuId', menuUser.menuId).select('*');
+            const menuUserItemImage = await knex('menu_user_item_image').where('userId', userId).select('*');
 
+            console.log("IMAGES", menuUserItemImage.length)
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
@@ -52,14 +54,16 @@ export default class MenuUserController {
                 mealsDay.forEach(mealtem => {
                     if (itemDay.numberDay === mealtem.numberDay) {
                         const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
-
+                        // const itemImage = menuUserItemImage.find(item => item.menuItemId === mealtem.menuItemId) as any;
+                        // console.log(itemImage.menuItemId);
+                        console.log("LOOP");
                         const newMeal = {
                             menuItemId: meal.id,
                             typeMealName: TypeMealEnum[meal.typeMealId],
                             typeMealId: meal.typeMealId,
                             descripition: meal.descripition,
-                            imageItem: meal.imageItem,
-                            rating: meal.rating
+                            imageItem: "itemImage.image",
+                            rating: 0
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
