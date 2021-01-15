@@ -6,13 +6,37 @@ export default class MenuItemController {
     constructor() { }
 
     async create(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: MenuItemDTOInterface = request.body;
+
+            const newMenuItem = {
+                menuId: data.menuId,
+                typeMealId: data.typeMealId,
+                descripition: data.descripition,
+                dateCreation: new Date()
+            }
+
+            const newMenuItemId = await trx('menu_item').insert(newMenuItem);
+
+            const newMenuItemDay = {
+                menuId: data.menuId,
+                menuItemId: newMenuItemId,
+                dayId: data.day?.dayId,
+                numberDay: data.day?.numberDay,
+                dateCreation: new Date()
+            }
+
+            await trx('menu_item_day').insert(newMenuItemDay);
+            await trx.commit();
 
             return response.status(200).json(
                 { message: "Refeição Criada com Sucesso" }
             );
         } catch (error) {
+            await trx.commit();
+
             return response.send(error);
         }
 

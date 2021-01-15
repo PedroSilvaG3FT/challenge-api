@@ -37,12 +37,14 @@ export default class ExerciceController {
     }
 
     async create(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: ExerciceInterface = request.body;
 
-            const trx = await knex.transaction();
             data.dateCreation = new Date();
             data.active = true;
+            
             const newExerciceId = await trx('exercice').insert(data);
             await trx.commit();
 
@@ -51,6 +53,7 @@ export default class ExerciceController {
                 message: `Exercicio : ${data.name} criado com sucesso` 
             })
         } catch (error) {
+            await trx.commit();
             return response.json({ message: error || "Erro" });
         }
     }
