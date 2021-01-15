@@ -24,7 +24,6 @@ export default class MenuItemController {
         try {
             const data: MenuItemDTOInterface = request.body;
 
-
             await trx('menu_item')
                 .where('id', data.id)
                 .update({ descripition: data.descripition });
@@ -46,11 +45,14 @@ export default class MenuItemController {
         try {
             const { id } = request.params;
 
-            await knex('menu_item_day').where('menuId', id).delete();
-            await knex('menu_item').where('id', id).delete();
+            await trx('menu_item_day').where('menuItemId', id).delete();
+            await trx('menu_item').where('id', id).delete();
+
+            await trx.commit();
 
             return response.status(200).json({ message: `Refeição Removida com Sucesso` });
         } catch (error) {
+            await trx.commit();
             return response.send(error);
         }
     }
