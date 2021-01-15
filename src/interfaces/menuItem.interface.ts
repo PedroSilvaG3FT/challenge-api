@@ -8,7 +8,6 @@ export interface MenuItemDTOInterface {
 }
 
 interface DayMenuItemDTOInterface {
-    id: number,
     dayId: number,
     numberDay: number,
 }

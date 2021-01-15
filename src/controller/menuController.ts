@@ -162,22 +162,21 @@ export default class MenuController {
     }
 
     async update(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
-            const data: MenuInterfaceDTO = request.body;
+            const data: MenuInterface = request.body;
 
-            const trx = await knex.transaction();
+            await trx('menu').where('id', data.id).update({ name: data.name })
 
-            const menu: MenuInterface = await trx('menu').where('id', data.id).select('*').first();
-
-            menu.name = data.name;
-            if (data.name != menu.name) {
-                await trx('menu').update(menu)
-            }
+            await trx.commit();
 
             return response.status(200).json(
                 { message: "Cardapio Atualizado com Sucesso" }
             );
         } catch (error) {
+            await trx.commit();
+
             return response.send(error);
 
         }
