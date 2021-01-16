@@ -12,11 +12,11 @@ export default class ExerciceUserController {
             const { userId } = request.params;
             const exerciceUserDays = await knex('exercice_user_day').where('userId', userId).select('*');
             const exerciceUserDayItems = await 
-                knex('exercice_user_day_item')
-                .join('exercice', 'exercice_user_day_item.exerciceId', '=', 'exercice.id')
-                .select('name')
-                .where('userId', userId)
-                .select('*');
+                knex("exercice_user_day_item")
+                .select('*')
+                .join("exercice", "exercice_user_day_item.exerciceId", "exercice.id")
+                .select("name")
+                .where("userId", userId)
 
             const numberDays = exerciceUserDays.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
@@ -64,8 +64,8 @@ export default class ExerciceUserController {
         try {
             const { userId } = request.params;
             
-            await knex('exercice_user_day').where('userId', userId).delete();
             await knex('exercice_user_day_item').where('userId', userId).delete();
+            await knex('exercice_user_day').where('userId', userId).delete();
             
             return response.json({message : "Exercicos removidos com sucesso"});
         } catch (error) {
@@ -79,8 +79,8 @@ export default class ExerciceUserController {
         try {
             const data: ExerciceUserInterfaceDTO = request.body;
 
-            await trx('exercice_user_day').where('userId', data.userId).delete();
             await trx('exercice_user_day_item').where('userId', data.userId).delete();
+            await trx('exercice_user_day').where('userId', data.userId).delete();
 
             data.days.forEach(async (day, index: number) => {
                 const newExerciceDay = {

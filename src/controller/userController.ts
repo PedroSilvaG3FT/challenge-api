@@ -103,7 +103,6 @@ export default class UserController {
 
         try {
             const data: UserInterface = request.body;
-            console.log(data);
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 

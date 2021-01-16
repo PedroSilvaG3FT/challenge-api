@@ -1,9 +1,13 @@
 import knex from "../database/connection";
 import { Request, Response } from "express";
 import { MemberMenuInterface, MenuUserInterface } from "../interfaces/menuUser.interface";
-import { MealInterface, MenuItemInterface } from "../interfaces/menu.interface";
+import { MealInterface } from "../interfaces/menu.interface";
 import { TypeMealEnum } from "../shared/enums/typeMeal.enum";
 import { DayEnum } from "../shared/enums/day.enum";
+import * as firebaseAdmin from "firebase-admin";
+import firebase from 'firebase';
+import { SIGNED_URL_CONFIG, STORAGE_BUCKET } from '../firebase/firebase';
+import stream from 'stream';
 
 export default class MenuUserController {
 
@@ -12,7 +16,6 @@ export default class MenuUserController {
     async getByUserId(request: Request, response: Response) {
         try {
             const { userId } = request.params;
-            console.log("USER ID ", userId);
             const menuUser = await knex('menu_user')
                 .where('userId', userId)
                 .where('active', true)
@@ -20,11 +23,12 @@ export default class MenuUserController {
                 .first();
 
             const menu = await knex('menu').where('id', menuUser.menuId).select('*').first();
-            const menuItem = await knex('menu_item').where('menuId', menuUser.menuId).select('*');
+            const menuItem = await knex('menu_item')
+                .where('menuId', menuUser.menuId)
+                .select('*');
             const menuItemDay = await knex('menu_item_day').where('menuId', menuUser.menuId).select('*');
-            const menuUserItemImage = await knex('menu_user_item_image').where('userId', userId).select('*');
+            // const menuUserItemImage = await knex('menu_user_item_image').where('userId', userId).select('*');
 
-            console.log("IMAGES", menuUserItemImage.length)
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
@@ -55,8 +59,6 @@ export default class MenuUserController {
                     if (itemDay.numberDay === mealtem.numberDay) {
                         const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
                         // const itemImage = menuUserItemImage.find(item => item.menuItemId === mealtem.menuItemId) as any;
-                        // console.log(itemImage.menuItemId);
-                        console.log("LOOP");
                         const newMeal = {
                             menuItemId: meal.id,
                             typeMealName: TypeMealEnum[meal.typeMealId],
@@ -97,7 +99,7 @@ export default class MenuUserController {
             return response.json({ message: "Menu Atribuido com sucesso" });
 
         } catch (error) {
-            response.json({message: error || "ERRO"});
+            response.json({ message: error || "ERRO" });
         }
     }
 
@@ -106,7 +108,7 @@ export default class MenuUserController {
 
         try {
             const data: any = request.body;
-            
+
             await trx('menu_user_item_image')
                 .where('menuItemId', data.menuItemId)
                 .delete();
@@ -118,7 +120,26 @@ export default class MenuUserController {
                 dateCreation: new Date()
             }
 
-            await trx('menu_user_item_image').insert(newImageItem)
+            var bufferStream = new stream.PassThrough();
+            bufferStream.end(Buffer.from(newImageItem.image, 'base64'));
+            
+            const bucket = await firebaseAdmin.storage().bucket(STORAGE_BUCKET);
+            console.log("TYPE :");
+
+            const file = bucket.file('my-file.jpg');
+            bufferStream.pipe(file.createWriteStream({
+                metadata: {
+                    contentType: 'image/jpeg',
+                },
+            }))
+                .on('error', (err) => { 
+                    console.log("ERROR");
+                })
+                .on('finish', () => {
+                    console.log("FINISH");
+                });
+
+                // await trx('menu_user_item_image').insert(newImageItem)
             await trx.commit();
 
             return response.json({ message: "Item atualizado com sucesso" });

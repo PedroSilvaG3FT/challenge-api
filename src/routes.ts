@@ -9,6 +9,7 @@ import ExerciceController from './controller/exerciceController';
 import ExerciceUserController from './controller/exerciceUserController';
 import UserWeightController from './controller/userWeightController';
 import MenuItemController from './controller/menuItemController';
+import FirebaseImagesController from './controller/firebaseImagesController';
 
 const routes = express.Router();
 
@@ -33,6 +34,10 @@ routes.get('/user/email/:email', userController.getByEmail);
 
 // MIDDLEAWERE
 // routes.use(authMiddleware);
+
+const firebaseImagesController = new FirebaseImagesController();
+routes.get('/imageFirebase', firebaseImagesController.getImage);
+routes.post('/imageFirebase', firebaseImagesController.create);
 
 //USER
 routes.put('/user', userController.update);
