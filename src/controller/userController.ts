@@ -64,7 +64,6 @@ export default class UserController {
 
             return response.json(user);
         } catch (error) {
-            console.log(error);
             return response.json({ message: error });
         }
     }
@@ -111,7 +110,6 @@ export default class UserController {
             return response.json({ message: `Usuário atualizado com sucesso` })
         } catch (error) {
             await trx.commit();
-            console.log(error);
             return response.status(500).json({ message: error });
         }
     }

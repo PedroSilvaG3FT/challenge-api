@@ -37,10 +37,6 @@ export default class MenuUserController {
                 .where('userId', userId)
                 .select('*');
 
-            const teste = menuUserItemImage.find(item => item.menuItemId === 17) as any;
-
-            console.log(teste)
-
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
@@ -70,9 +66,8 @@ export default class MenuUserController {
                 mealsDay.forEach(mealtem => {
                     if (itemDay.numberDay === mealtem.numberDay) {
                         const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
-                        // console.log(meal);
                         const itemImage = menuUserItemImage.find(item => item.menuItemId === mealtem.menuItemId) as any;
-                        // console.log(itemImage);
+
                         const newMeal = {
                             menuItemId: meal.id,
                             typeMealName: TypeMealEnum[meal.typeMealId],
