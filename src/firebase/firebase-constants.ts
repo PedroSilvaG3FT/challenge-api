@@ -1,5 +1,12 @@
 import { GetSignedUrlConfig } from "@google-cloud/storage";
 
+export const STORAGE_BUCKET = "challenge-90-4efb8.appspot.com";
+
+export const SIGNED_URL_CONFIG: GetSignedUrlConfig = {
+    action: 'read',
+    expires: "03-17-2025"
+}
+
 export const FIREBASE_CONFIG = {
     apiKey: "AIzaSyDa2_wDLkzvoZdbnaT7mlrm88W-RILqQ44",
     authDomain: "challenge-90-4efb8.firebaseapp.com",
@@ -17,9 +24,7 @@ export const FIREBASE_CONFIG = {
     auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
 };
 
-export const STORAGE_BUCKET = "challenge-90-4efb8.appspot.com";
-
-export const SIGNED_URL_CONFIG: GetSignedUrlConfig = {
-    action: 'read', 
-    expires: "03-17-2025"
+export const PATH_STORAGE = {
+    root:  '',
+    menu: 'menu'
 }

@@ -3,7 +3,7 @@ import routes from './routes';
 import bodyParser from 'body-parser';
 
 import * as firebaseAdmin from "firebase-admin";
-import { FIREBASE_CONFIG, STORAGE_BUCKET } from './firebase/firebase';
+import { FIREBASE_CONFIG, STORAGE_BUCKET } from './firebase/firebase-constants';
 
 const cors = require('cors');
 

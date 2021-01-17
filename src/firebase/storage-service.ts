@@ -1,5 +1,5 @@
 import * as firebaseAdmin from "firebase-admin";
-import { SIGNED_URL_CONFIG, STORAGE_BUCKET } from '../firebase/firebase';
+import { SIGNED_URL_CONFIG, STORAGE_BUCKET } from './firebase-constants';
 import stream from 'stream';
 import crypto from 'crypto';
 
@@ -8,8 +8,6 @@ export const uploadImageStorage = function (base64: string, path: string, fileNa
     return new Promise(async (resolve, reject) => {
         const hash = crypto.randomBytes(16).toString('hex');
         const fileNameStorage = fileName ? fileName : `${hash}`;
-        
-        console.log(fileNameStorage);
         
         const bufferStream = new stream.PassThrough();
         bufferStream.end(Buffer.from(base64, 'base64'));
