@@ -113,13 +113,13 @@ export default class MenuUserController {
                 .delete();
 
             const newImageItem = {
-                userId: data.userId,
-                menuItemId: data.menuItemId,
                 image: '',
-                dateCreation: new Date()
+                userId: data.userId,
+                dateCreation: new Date(),
+                menuItemId: data.menuItemId,
             }
 
-            newImageItem.image = await uploadImageStorage(image64, 'menu', 'nomeImagem1')
+            newImageItem.image = await uploadImageStorage(image64, 'menu')
 
             await trx('menu_user_item_image').insert(newImageItem);
 
