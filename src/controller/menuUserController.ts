@@ -77,10 +77,9 @@ export default class MenuUserController {
     }
 
     async create(request: Request, response: Response) {
+        const trx = await knex.transaction();
         try {
             const data: MenuUserInterface = request.body;
-
-            const trx = await knex.transaction();
 
             const allMenuUser = await trx('menu_user').where('userId', data.userId).select('*');
 
@@ -90,12 +89,14 @@ export default class MenuUserController {
 
             data.active = true;
             data.dateCreation = new Date();
-            await trx('menu_user').insert(data);
-            trx.commit();
 
+            await trx('menu_user').insert(data);
+            
+            trx.commit();
             return response.json({ message: "Menu Atribuido com sucesso" });
 
         } catch (error) {
+            trx.commit();
             response.json({ message: error || "ERRO" });
         }
     }
@@ -105,6 +106,7 @@ export default class MenuUserController {
 
         try {
             const data: any = request.body;
+            const image64: string = data.image64;
 
             await trx('menu_user_item_image')
                 .where('menuItemId', data.menuItemId)
@@ -113,11 +115,13 @@ export default class MenuUserController {
             const newImageItem = {
                 userId: data.userId,
                 menuItemId: data.menuItemId,
-                image: data.image64,
+                image: '',
                 dateCreation: new Date()
             }
 
-            const newImage = await uploadImageStorage(newImageItem.image, 'menu', 'nomeImagem2')
+            newImageItem.image = await uploadImageStorage(image64, 'menu', 'nomeImagem1')
+
+            await trx('menu_user_item_image').insert(newImageItem);
 
             await trx.commit();
             return response.json({ message: "Item atualizado com sucesso" });
