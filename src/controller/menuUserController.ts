@@ -3,11 +3,8 @@ import { Request, Response } from "express";
 import { MemberMenuInterface, MenuUserInterface } from "../interfaces/menuUser.interface";
 import { MealInterface } from "../interfaces/menu.interface";
 import { TypeMealEnum } from "../shared/enums/typeMeal.enum";
-import { DayEnum } from "../shared/enums/day.enum";
-import * as firebaseAdmin from "firebase-admin";
-import firebase from 'firebase';
-import { SIGNED_URL_CONFIG, STORAGE_BUCKET } from '../firebase/firebase';
-import stream from 'stream';
+import { DayEnum } from "../shared/enums/day.enum";;
+import { uploadImageStorage } from "../firebase/storage-service";
 
 export default class MenuUserController {
 
@@ -120,28 +117,9 @@ export default class MenuUserController {
                 dateCreation: new Date()
             }
 
-            var bufferStream = new stream.PassThrough();
-            bufferStream.end(Buffer.from(newImageItem.image, 'base64'));
-            
-            const bucket = await firebaseAdmin.storage().bucket(STORAGE_BUCKET);
-            console.log("TYPE :");
+            await uploadImageStorage(newImageItem.image, 'menu', 'nomeImagem')
 
-            const file = bucket.file('my-file.jpg');
-            bufferStream.pipe(file.createWriteStream({
-                metadata: {
-                    contentType: 'image/jpeg',
-                },
-            }))
-                .on('error', (err) => { 
-                    console.log("ERROR");
-                })
-                .on('finish', () => {
-                    console.log("FINISH");
-                });
-
-                // await trx('menu_user_item_image').insert(newImageItem)
             await trx.commit();
-
             return response.json({ message: "Item atualizado com sucesso" });
         } catch (error) {
             await trx.commit();

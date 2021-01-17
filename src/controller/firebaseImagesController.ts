@@ -7,7 +7,7 @@ export default class FirebaseImagesController {
     async getImage(request: Request, response: Response) {
         try {
             const bucket = await firebase.storage().bucket(STORAGE_BUCKET);
-            const fileName = "security.png"
+            const fileName = "nomeImagem.jpg"
             const imageUrl = await bucket.file(`menu/${fileName}`).getSignedUrl(SIGNED_URL_CONFIG);
 
             return response.json({ imageUrl: imageUrl[0]});

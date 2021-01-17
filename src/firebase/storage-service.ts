@@ -1,0 +1,18 @@
+import * as firebaseAdmin from "firebase-admin";
+import { SIGNED_URL_CONFIG, STORAGE_BUCKET } from '../firebase/firebase';
+import stream from 'stream';
+
+export const uploadImageStorage = function (base64: string, path: string, fileName: string) {
+
+    return new Promise(async (resolve, reject) => {
+        const bufferStream = new stream.PassThrough();
+        bufferStream.end(Buffer.from(base64, 'base64'));
+
+        const bucket = await firebaseAdmin.storage().bucket(STORAGE_BUCKET);
+        const file = bucket.file(`${path}/${fileName}.jpg`);
+
+        bufferStream.pipe(file.createWriteStream({ metadata: { contentType: 'image/jpeg' } }))
+            .on('error', error => reject(`Error on upload image: ${JSON.stringify(error)}`))
+            .on('finish', () => resolve({ status: 201, message: 'Upload Success'}));
+    })
+};
