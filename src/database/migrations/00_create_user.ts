@@ -10,11 +10,11 @@ export async function up(knex: Knex) {
         table.string('cpf');
         table.integer('age');
         table.string('comments');
-        table.integer('phoneNumber');
-        table.decimal('startingWeight', 3, 2);
-        table.decimal('goalWeight', 3, 2);
-        table.decimal('goalWeek', 3, 2);
-        table.decimal('height', 3, 2);
+        table.bigInteger('phoneNumber');
+        table.decimal('startingWeight', 5, 2);
+        table.decimal('goalWeight', 5, 2);
+        table.decimal('goalWeek', 5, 2);
+        table.decimal('height', 5, 2);
         table.integer('payday');
         table.boolean('isAdm');
         table.string('image', VARCHAR_MAX);

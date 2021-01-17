@@ -20,12 +20,26 @@ export default class MenuUserController {
                 .select('*')
                 .first();
 
-            const menu = await knex('menu').where('id', menuUser.menuId).select('*').first();
+            const menu = await knex('menu')
+                .where('id', menuUser.menuId)
+                .select('*')
+                .first();
+
             const menuItem = await knex('menu_item')
                 .where('menuId', menuUser.menuId)
                 .select('*');
-            const menuItemDay = await knex('menu_item_day').where('menuId', menuUser.menuId).select('*');
-            // const menuUserItemImage = await knex('menu_user_item_image').where('userId', userId).select('*');
+
+            const menuItemDay = await knex('menu_item_day')
+                .where('menuId', menuUser.menuId)
+                .select('*')
+
+            const menuUserItemImage = await knex('menu_user_item_image')
+                .where('userId', userId)
+                .select('*');
+
+            const teste = menuUserItemImage.find(item => item.menuItemId === 17) as any;
+
+            console.log(teste)
 
             const numberDays = menuItemDay.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
@@ -56,14 +70,16 @@ export default class MenuUserController {
                 mealsDay.forEach(mealtem => {
                     if (itemDay.numberDay === mealtem.numberDay) {
                         const meal = menuItem.find(item => item.id === mealtem.menuItemId) as any;
-                        // const itemImage = menuUserItemImage.find(item => item.menuItemId === mealtem.menuItemId) as any;
+                        // console.log(meal);
+                        const itemImage = menuUserItemImage.find(item => item.menuItemId === mealtem.menuItemId) as any;
+                        // console.log(itemImage);
                         const newMeal = {
                             menuItemId: meal.id,
                             typeMealName: TypeMealEnum[meal.typeMealId],
                             typeMealId: meal.typeMealId,
                             descripition: meal.descripition,
-                            imageItem: "itemImage.image",
-                            rating: 0
+                            imageItem: itemImage?.image,
+                            rating: itemImage?.rating
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
@@ -92,7 +108,7 @@ export default class MenuUserController {
             data.dateCreation = new Date();
 
             await trx('menu_user').insert(data);
-            
+
             trx.commit();
             return response.json({ message: "Menu Atribuido com sucesso" });
 
@@ -127,7 +143,7 @@ export default class MenuUserController {
             await trx.commit();
             return response.json({ message: "Item atualizado com sucesso" });
         } catch (error) {
-            
+
             await trx.commit();
             return response.json({ message: "DEU RUIM" });
         }

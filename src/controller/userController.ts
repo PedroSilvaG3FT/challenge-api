@@ -53,7 +53,7 @@ export default class UserController {
             
             return response.json(user);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(500).json({ message: "ERROR" });
         }
     }
 
@@ -64,6 +64,7 @@ export default class UserController {
 
             return response.json(user);
         } catch (error) {
+            console.log(error);
             return response.json({ message: error });
         }
     }
@@ -102,14 +103,16 @@ export default class UserController {
         const trx = await knex.transaction();
 
         try {
-            const data: UserInterface = request.body;
+            const data: UserInterface = request.body as UserInterface;
+
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
-            return response.json({ message: `Usuário : ${data.name} atualizado com sucesso` })
+            return response.json({ message: `Usuário atualizado com sucesso` })
         } catch (error) {
             await trx.commit();
-            return response.json({ message: error });
+            console.log(error);
+            return response.status(500).json({ message: error });
         }
     }
 
