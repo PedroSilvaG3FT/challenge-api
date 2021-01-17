@@ -4,7 +4,7 @@ import { MemberMenuInterface, MenuUserInterface } from "../interfaces/menuUser.i
 import { MealInterface } from "../interfaces/menu.interface";
 import { TypeMealEnum } from "../shared/enums/typeMeal.enum";
 import { DayEnum } from "../shared/enums/day.enum";;
-import { getURLImageStorage, uploadImageStorage } from "../firebase/storage-service";
+import { uploadImageStorage } from "../firebase/storage-service";
 
 export default class MenuUserController {
 
@@ -118,9 +118,6 @@ export default class MenuUserController {
             }
 
             const newImage = await uploadImageStorage(newImageItem.image, 'menu', 'nomeImagem2')
-            
-            // const urlImage = await getURLImageStorage('menu', 'nomeImagem2');
-            console.log(newImage);
 
             await trx.commit();
             return response.json({ message: "Item atualizado com sucesso" });
