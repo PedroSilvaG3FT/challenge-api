@@ -9,6 +9,8 @@ import ExerciceController from './controller/exerciceController';
 import ExerciceUserController from './controller/exerciceUserController';
 import UserWeightController from './controller/userWeightController';
 import MenuItemController from './controller/menuItemController';
+import PaymentController from './controller/paymentController';
+import BankAccountController from './controller/bankAccountController';
 
 const routes = express.Router();
 
@@ -23,6 +25,9 @@ const exerciceController = new ExerciceController();
 const exerciceUserController = new ExerciceUserController();
 
 const userWeightController = new UserWeightController();
+
+const paymentController = new PaymentController();
+const bankAccountController = new BankAccountController();
 
 routes.get('/', (request, response) => response.send("Challenge 90 Start"));
 
@@ -75,5 +80,15 @@ routes.delete('/exerciceUser/:userId', exerciceUserController.removeAllByUserId)
 routes.post('/userWeight', userWeightController.create);
 routes.delete('/userWeight/:id', userWeightController.remove);
 routes.get('/userWeight/:userId', userWeightController.getByUserId);
+
+//PAYMENT
+routes.get('/payment', paymentController.getAll);
+routes.get('/payment/:id', paymentController.getById);
+
+//BANK_ACCOUNT
+routes.get('/bankAccount', bankAccountController.getAll);
+routes.post('/bankAccount', bankAccountController.create);
+routes.delete('/bankAccount/:id', bankAccountController.delete);
+
 
 export default routes;

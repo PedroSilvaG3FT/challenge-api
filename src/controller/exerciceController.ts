@@ -54,7 +54,7 @@ export default class ExerciceController {
             })
         } catch (error) {
             await trx.commit();
-            return response.json({ message: error || "Erro" });
+            return response.status(500).json({ message: error || "Erro" });
         }
     }
 
