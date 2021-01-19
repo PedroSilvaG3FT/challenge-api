@@ -1,5 +1,5 @@
 export interface UserPaymentInterface {
-    id: number,
+    id?: number,
     userId: number,
     paymentId: number,
     value: number,

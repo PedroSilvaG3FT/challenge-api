@@ -11,6 +11,7 @@ import UserWeightController from './controller/userWeightController';
 import MenuItemController from './controller/menuItemController';
 import PaymentController from './controller/paymentController';
 import BankAccountController from './controller/bankAccountController';
+import UserPaymentController from './controller/userPaymentController';
 
 const routes = express.Router();
 
@@ -28,6 +29,7 @@ const userWeightController = new UserWeightController();
 
 const paymentController = new PaymentController();
 const bankAccountController = new BankAccountController();
+const userPaymentController = new UserPaymentController();
 
 routes.get('/', (request, response) => response.send("Challenge 90 Start"));
 
@@ -90,6 +92,14 @@ routes.get('/payment/:id', paymentController.getById);
 routes.get('/bankAccount', bankAccountController.getAll);
 routes.post('/bankAccount', bankAccountController.create);
 routes.delete('/bankAccount/:id', bankAccountController.delete);
+
+//USER_PAYMENT
+routes.get('/userPayment', userPaymentController.getAll);
+routes.post('/userPayment', userPaymentController.create);
+routes.get('/userPayment/:id', userPaymentController.getById);
+routes.get('/userPayment/user/:userId', userPaymentController.getByUserId);
+
+
 
 
 export default routes;
