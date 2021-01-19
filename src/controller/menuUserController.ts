@@ -73,8 +73,9 @@ export default class MenuUserController {
                             typeMealName: TypeMealEnum[meal.typeMealId],
                             typeMealId: meal.typeMealId,
                             descripition: meal.descripition,
+                            menuUserItemImageId: itemImage?.id,
                             imageItem: itemImage?.image,
-                            rating: itemImage?.rating
+                            rating: String(itemImage?.rating)
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
@@ -150,9 +151,11 @@ export default class MenuUserController {
         try {
             const data: any = request.body;
 
-            await trx('menu_item')
-                .where('id', data.menuItemId)
-                .update({ imageItem: data.image64 })
+            console.log('DATA :', data)
+
+            await trx('menu_user_item_image')
+                .where('id', data.menuUserItemImageId)
+                .update({ rating: Number(data.rating) })
 
             await trx.commit();
 

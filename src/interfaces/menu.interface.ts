@@ -28,8 +28,10 @@ export interface MealInterface {
     typeMealName: string,
     typeMealId: number,
     descripition: string,
-    imageItem: string,
-    rating: number
+
+    menuUserItemImageId?: number,
+    imageItem?: string,
+    rating?: number | string
 }
 
 export interface MenuInterfaceDTO {

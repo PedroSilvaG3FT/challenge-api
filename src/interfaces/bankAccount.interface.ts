@@ -1,11 +1,11 @@
 export interface BankAccountInterface {
-    id: number,
+    id?: number,
     bank: string,
     agency: string,
     account: string,
     document: string,
     nameOwner: string,
 
-    active: boolean,
-    dateCreation: Date
+    active?: boolean,
+    dateCreation?: Date
 }

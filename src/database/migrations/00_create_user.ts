@@ -16,6 +16,7 @@ export async function up(knex: Knex) {
         table.decimal('goalWeek', 5, 2);
         table.decimal('height', 5, 2);
         table.integer('payday');
+        table.integer('paymentId');
         table.boolean('isAdm');
         table.string('image', VARCHAR_MAX);
         table.boolean('acceptTerm');

@@ -56,7 +56,7 @@ export default class ExerciceUserController {
 
             return response.json(exercicesUser);
         } catch (error) {
-            response.send(error);
+            response.status(500).send(error);
         }
     }
 
@@ -69,7 +69,7 @@ export default class ExerciceUserController {
             
             return response.json({message : "Exercicos removidos com sucesso"});
         } catch (error) {
-            response.send(error);
+            response.status(500).send(error);
         }
     }
 
@@ -120,7 +120,7 @@ export default class ExerciceUserController {
 
         } catch (error) {
             await trx.commit();
-            response.json({ message: error || "ERRO" });
+            response.status(500).json({ message: error || "ERRO" });
         }
     }
 }
