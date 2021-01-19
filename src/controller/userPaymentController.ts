@@ -1,6 +1,7 @@
 import knex from '../database/connection';
 import { Request, Response } from "express";
 import { UserPaymentInterface } from "../interfaces/userPayment.interface";
+import { addMonths, setDay, setISODay } from 'date-fns';
 
 export default class UserPaymentController {
 
@@ -51,33 +52,36 @@ export default class UserPaymentController {
         try {
             const data: UserPaymentInterface = request.body;
 
-            data.dateCreation = new Date();
-            data.active = true;
-
             const value = 100;
             const plots = 3;
 
             for (let i = 0; i < plots; i++) {
-                console.log("PARCELA :", i);
+                const currentPlot = i + 1;
                 const currentDate = new Date();
-                
+
+                const newDueDate = new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth() + currentPlot,
+                    data.payday
+                );
+
                 const newUserPayment: UserPaymentInterface = {
                     active: true,
                     value: value,
                     userId: data.userId,
-                    dueDate: new Date(),
+                    dueDate: newDueDate,
                     dateCreation: new Date(),
-                    paymentId: data.paymentId,
                 } 
 
-                console.log(newUserPayment)
+                await trx('user_payment').insert(newUserPayment);
             }
-
             trx.commit();
+
             return response.status(200).json({
                 message: `Pagamentos do usuario criados com sucesso`
             })
         } catch (error) {
+            console.log("ERROR :", error);
             trx.commit();
             return response.status(500).json({ message: error || "ERRO" });
         }
