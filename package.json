@@ -7,7 +7,7 @@
     "dev": "ts-node-dev src/server.ts",
     "publish": "git push umbler master",
     "start": "npm run build && node dist/src/server.js",
-    "build": "tsc && npm run knex:migrate && npm run knex:seed",
+    "build": "tsc && npm run knex:migrate",
     "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
   },
