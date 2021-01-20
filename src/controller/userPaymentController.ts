@@ -51,7 +51,7 @@ export default class UserPaymentController {
 
         try {
             const data: UserPaymentInterface = request.body;
-
+            console.log("DATA",data);
             const value = 100;
             const plots = 3;
 

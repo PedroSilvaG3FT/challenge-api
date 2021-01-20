@@ -1,5 +1,5 @@
 export interface UserWeightInterface {
-    id: number,
+    id?: number,
     userId: number,
     weight: number,
     active: boolean,

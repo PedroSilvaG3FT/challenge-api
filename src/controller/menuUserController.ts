@@ -75,7 +75,7 @@ export default class MenuUserController {
                             descripition: meal.descripition,
                             menuUserItemImageId: itemImage?.id,
                             imageItem: itemImage?.image,
-                            rating: String(itemImage?.rating)
+                            rating: itemImage?.rating ? String(itemImage?.rating) : null
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)

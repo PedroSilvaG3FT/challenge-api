@@ -87,7 +87,16 @@ export default class UserController {
             const hash = await _hash(data.password as string);
             data.password = hash as string;
 
-            await trx('user').insert(data);
+            const newUserId = await trx('user').insert(data);
+
+            const userWeight: UserWeightInterface = {
+                active: true,
+                userId: newUserId[0],
+                dateCreation: new Date(),
+                weight: Number(data.startingWeight),
+            };
+
+            await trx('user_weight').insert(userWeight);
             await trx.commit();
 
             return response.json({ message: `Usuário : ${data.name} criado com sucesso` })
@@ -103,14 +112,16 @@ export default class UserController {
 
         try {
             const data: UserInterface = request.body as UserInterface;
+            data.currentWeight = undefined;
 
+            console.log(data)
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
             return response.json({ message: `Usuário atualizado com sucesso` })
         } catch (error) {
             await trx.commit();
-            return response.status(500).json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
