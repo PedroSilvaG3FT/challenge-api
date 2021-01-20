@@ -102,6 +102,7 @@ routes.delete('/bankAccount/:id', bankAccountController.delete);
 //USER_PAYMENT
 routes.get('/userPayment', userPaymentController.getAll);
 routes.post('/userPayment', userPaymentController.create);
+routes.put('/userPayment', userPaymentController.update);
 routes.get('/userPayment/:id', userPaymentController.getById);
 routes.get('/userPayment/user/:userId', userPaymentController.getByUserId);
 

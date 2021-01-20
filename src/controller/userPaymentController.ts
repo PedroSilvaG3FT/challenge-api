@@ -92,10 +92,13 @@ export default class UserPaymentController {
 
         try {
             const data: UserPaymentInterface = request.body;
+            console.log(data);
 
+            await trx('user_payment').where('id', data.id).update(data);
             trx.commit();
+
             return response.status(200).json({
-                message: `Pagamentos do usuario atualizado com sucesso`
+                message: `Pagamento atualizado com sucesso`
             })
         } catch (error) {
             trx.commit();
