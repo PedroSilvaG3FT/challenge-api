@@ -6,7 +6,6 @@ import * as firebaseAdmin from "firebase-admin";
 import { FIREBASE_CONFIG, STORAGE_BUCKET } from './firebase/firebase-constants';
 
 const cors = require('cors');
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }))

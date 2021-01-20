@@ -12,6 +12,7 @@ import MenuItemController from './controller/menuItemController';
 import PaymentController from './controller/paymentController';
 import BankAccountController from './controller/bankAccountController';
 import UserPaymentController from './controller/userPaymentController';
+import AvatarController from './controller/avatarController';
 
 const routes = express.Router();
 
@@ -31,6 +32,8 @@ const paymentController = new PaymentController();
 const bankAccountController = new BankAccountController();
 const userPaymentController = new UserPaymentController();
 
+const avatarController = new AvatarController();
+
 routes.get('/', (request, response) => response.send("Challenge 90 Start"));
 
 //AUTH 
@@ -40,6 +43,9 @@ routes.get('/user/email/:email', userController.getByEmail);
 
 // MIDDLEAWERE
 // routes.use(authMiddleware);
+
+//AVATAR
+routes.get('/avatar', avatarController.getAll);
 
 //USER
 routes.put('/user', userController.update);
