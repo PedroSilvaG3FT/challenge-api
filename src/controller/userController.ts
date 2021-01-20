@@ -114,7 +114,6 @@ export default class UserController {
             const data: UserInterface = request.body as UserInterface;
             data.currentWeight = undefined;
 
-            console.log(data)
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
