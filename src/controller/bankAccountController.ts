@@ -13,7 +13,7 @@ export default class BankAccountController {
 
             return response.status(200).json(BankAccountList);
         } catch (error) {
-            return response.status(500).json({ message: error || "ERRO" });
+            return response.status(400).json({ message: error || "ERRO" });
         }
     }
 
@@ -29,10 +29,10 @@ export default class BankAccountController {
             await trx('bank_account').insert(data);
 
             await trx.commit();
-            return response.json({ message: `Conta criada com sucesso` })
+            return response.status(200).json({ message: `Conta criada com sucesso` })
         } catch (error) {
             await trx.commit();
-            return response.json({ message: error || "Erro" });
+            return response.status(400).json({ message: error || "Erro" });
         }
     }
 
@@ -41,9 +41,9 @@ export default class BankAccountController {
             const { id } = request.params;
 
             await knex('bank_account').where('id', id).delete();
-            return response.json({ message: `Conta removida com sucesso` })
+            return response.status(200).json({ message: `Conta removida com sucesso` })
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 }

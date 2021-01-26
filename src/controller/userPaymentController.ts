@@ -1,7 +1,6 @@
 import knex from '../database/connection';
 import { Request, Response } from "express";
 import { UserPaymentInterface } from "../interfaces/userPayment.interface";
-import { addMonths, setDay, setISODay } from 'date-fns';
 
 export default class UserPaymentController {
 
@@ -26,9 +25,9 @@ export default class UserPaymentController {
                     .select('*')
                     .first();
 
-            return response.json(userPayment);
+            return response.status(200).json(userPayment);
         } catch (error) {
-            return response.status(500).json({ message: error || "ERRO" });
+            return response.status(400).json({ message: error || "ERRO" });
         }
     }
 
@@ -40,7 +39,7 @@ export default class UserPaymentController {
                     .where('userId', userId)
                     .select('*')
 
-            return response.json(userPaymentList);
+            return response.status(200).json(userPaymentList);
         } catch (error) {
             return response.status(500).json({ message: error || "ERRO" });
         }
@@ -51,7 +50,6 @@ export default class UserPaymentController {
 
         try {
             const data: UserPaymentInterface = request.body;
-            console.log("DATA",data);
             const value = 100;
             const plots = 3;
 
@@ -75,14 +73,13 @@ export default class UserPaymentController {
 
                 await trx('user_payment').insert(newUserPayment);
             }
-            trx.commit();
+            await trx.commit();
 
             return response.status(200).json({
                 message: `Pagamentos do usuario criados com sucesso`
             })
         } catch (error) {
-            console.log("ERROR :", error);
-            trx.commit();
+            await trx.commit();
             return response.status(500).json({ message: error || "ERRO" });
         }
     }
@@ -92,16 +89,15 @@ export default class UserPaymentController {
 
         try {
             const data: UserPaymentInterface = request.body;
-            console.log(data);
 
             await trx('user_payment').where('id', data.id).update(data);
-            trx.commit();
+            await trx.commit();
 
             return response.status(200).json({
                 message: `Pagamento atualizado com sucesso`
             })
         } catch (error) {
-            trx.commit();
+            await trx.commit();
             return response.status(500).json({ message: error || "ERRO" });
         }
     }

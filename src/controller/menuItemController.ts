@@ -36,8 +36,7 @@ export default class MenuItemController {
             );
         } catch (error) {
             await trx.commit();
-
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
 
     }
@@ -59,7 +58,7 @@ export default class MenuItemController {
             );
         } catch (error) {
             await trx.commit();
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -77,7 +76,7 @@ export default class MenuItemController {
             return response.status(200).json({ message: `Refeição Removida com Sucesso` });
         } catch (error) {
             await trx.commit();
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 

@@ -30,9 +30,9 @@ export default class UserController {
                 });
             })
             
-            return response.json(userList);
+            return response.status(200).json(userList);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -51,9 +51,9 @@ export default class UserController {
             user.currentWeight = userWeight ? userWeight.weight : 0;
             user.password = undefined;
             
-            return response.json(user);
+            return response.status(200).json(user);
         } catch (error) {
-            return response.status(500).json({ message: "ERROR" });
+            return response.status(400).json({ message: "ERROR" });
         }
     }
 
@@ -62,9 +62,9 @@ export default class UserController {
             const { email } = request.params;
             const user: UserInterface = await knex('user').where('email', email).select('*').first();
 
-            return response.json(user);
+            return response.status(200).json(user);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -99,11 +99,10 @@ export default class UserController {
             await trx('user_weight').insert(userWeight);
             await trx.commit();
 
-            return response.json({ message: `Usuário : ${data.name} criado com sucesso` })
+            return response.status(200).json({ message: `Usuário : ${data.name} criado com sucesso` })
         } catch (error) {
             await trx.commit();
-
-            return response.json({ message: error || "Erro" });
+            return response.status(400).json({ message: error || "Erro" });
         }
     }
 
@@ -117,7 +116,7 @@ export default class UserController {
             await trx('user').where('id', data.id).update(data);
             await trx.commit();
 
-            return response.json({ message: `Usuário atualizado com sucesso` })
+            return response.status(200).json({ message: `Usuário atualizado com sucesso` })
         } catch (error) {
             await trx.commit();
             return response.status(400).json({ message: error });
@@ -129,9 +128,9 @@ export default class UserController {
             const { id } = request.params;
 
             await knex('user').where('id', id).update({ active: false });
-            return response.json({ message: `Usuário removido com sucesso` })
+            return response.status(200).json({ message: `Usuário removido com sucesso` })
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 

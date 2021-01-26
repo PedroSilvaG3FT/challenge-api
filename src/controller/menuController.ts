@@ -16,9 +16,9 @@ export default class MenuController {
     async getAll(request: Request, response: Response) {
         try {
             const menuList = await knex('menu').select('*');
-            return response.json(menuList);
+            return response.status(200).json(menuList);
         } catch (error) {
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -71,9 +71,9 @@ export default class MenuController {
                 })
             });
 
-            return response.json(menuDTO);
+            return response.status(200).json(menuDTO);
         } catch (error) {
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -90,7 +90,7 @@ export default class MenuController {
                 { message: `Cardapio ${newStatus ? 'Habilitado' : 'Desabilitado'} com Sucesso` }
             );
         } catch (error) {
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -107,11 +107,13 @@ export default class MenuController {
                 { message: `Cardapio Removido com Sucesso` }
             );
         } catch (error) {
-            return response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
     async create(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: MenuInterfaceDTO = request.body;
 
@@ -121,8 +123,6 @@ export default class MenuController {
                 active: true,
                 dateCreation: new Date(),
             };
-
-            const trx = await knex.transaction();
 
             const insertedMenu = await trx('menu').insert(newMenu);
 
@@ -156,7 +156,8 @@ export default class MenuController {
                 { message: "Cardapio Criado com Sucesso" }
             );
         } catch (error) {
-            return response.send(error);
+            await trx.commit();
+            return response.status(400).json({ message: error });
         }
 
     }
@@ -176,8 +177,7 @@ export default class MenuController {
             );
         } catch (error) {
             await trx.commit();
-
-            return response.send(error);
+            return response.status(400).json({ message: error });
 
         }
     }

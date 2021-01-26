@@ -11,12 +11,12 @@ export default class ExerciceUserController {
         try {
             const { userId } = request.params;
             const exerciceUserDays = await knex('exercice_user_day').where('userId', userId).select('*');
-            const exerciceUserDayItems = await 
+            const exerciceUserDayItems = await
                 knex("exercice_user_day_item")
-                .select('*')
-                .join("exercice", "exercice_user_day_item.exerciceId", "exercice.id")
-                .select("name")
-                .where("userId", userId)
+                    .select('*')
+                    .join("exercice", "exercice_user_day_item.exerciceId", "exercice.id")
+                    .select("name")
+                    .where("userId", userId)
 
             const numberDays = exerciceUserDays.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
@@ -40,7 +40,7 @@ export default class ExerciceUserController {
                 const exercicesDay = exerciceUserDayItems.filter(x => itemDay.numberDay === x.numberDay);
 
                 exercicesDay.forEach(exerciceItem => {
-                    if(exerciceItem.numberDay === itemDay.numberDay) {
+                    if (exerciceItem.numberDay === itemDay.numberDay) {
                         const newExerciceItem: ItemExerciceMemberInterface = {
                             amount: exerciceItem.amount,
                             exercice: {
@@ -54,22 +54,22 @@ export default class ExerciceUserController {
                 })
             })
 
-            return response.json(exercicesUser);
+            return response.status(200).json(exercicesUser);
         } catch (error) {
-            response.status(500).send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
     async removeAllByUserId(request: Request, response: Response) {
         try {
             const { userId } = request.params;
-            
+
             await knex('exercice_user_day_item').where('userId', userId).delete();
             await knex('exercice_user_day').where('userId', userId).delete();
-            
-            return response.json({message : "Exercicos removidos com sucesso"});
+
+            return response.status(200).json({ message: "Exercicos removidos com sucesso" });
         } catch (error) {
-            response.status(500).send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -116,11 +116,11 @@ export default class ExerciceUserController {
 
             })
 
-            return response.json({ message: "Exercicios cadastrados com sucesso" });
+            return response.status(200).json({ message: "Exercicios cadastrados com sucesso" });
 
         } catch (error) {
             await trx.commit();
-            response.status(500).json({ message: error || "ERRO" });
+            return response.status(400).json({ message: error || "ERRO" });
         }
     }
 }

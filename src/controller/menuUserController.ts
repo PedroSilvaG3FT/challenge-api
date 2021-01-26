@@ -83,14 +83,15 @@ export default class MenuUserController {
                 })
             });
 
-            return response.json(menuMemberDTO);
+            return response.status(200).json(menuMemberDTO);
         } catch (error) {
-            response.send(error);
+            return response.status(400).json({ message: error });
         }
     }
 
     async create(request: Request, response: Response) {
         const trx = await knex.transaction();
+
         try {
             const data: MenuUserInterface = request.body;
 
@@ -105,12 +106,12 @@ export default class MenuUserController {
 
             await trx('menu_user').insert(data);
 
-            trx.commit();
-            return response.json({ message: "Menu Atribuido com sucesso" });
+            await trx.commit();
+            return response.status(200).json({ message: "Menu Atribuido com sucesso" });
 
         } catch (error) {
-            trx.commit();
-            response.json({ message: error || "ERRO" });
+            await trx.commit();
+            return response.status(400).json({ message: error || "ERRO" });
         }
     }
 
@@ -137,11 +138,10 @@ export default class MenuUserController {
             await trx('menu_user_item_image').insert(newImageItem);
 
             await trx.commit();
-            return response.json({ message: "Item atualizado com sucesso" });
+            return response.status(200).json({ message: "Item atualizado com sucesso" });
         } catch (error) {
-
             await trx.commit();
-            return response.json({ message: "DEU RUIM" });
+            return response.status(400).json({ message: "DEU RUIM" });
         }
     }
 
@@ -151,18 +151,16 @@ export default class MenuUserController {
         try {
             const data: any = request.body;
 
-            console.log('DATA :', data)
-
             await trx('menu_user_item_image')
                 .where('id', data.menuUserItemImageId)
                 .update({ rating: Number(data.rating) })
 
             await trx.commit();
 
-            return response.json({ message: "Item atualizado com sucesso" });
+            return response.status(200).json({ message: "Item atualizado com sucesso" });
         } catch (error) {
             await trx.commit();
-            return response.json({ message: "DEU RUIM" });
+            return response.status(400).json({ message: "DEU RUIM" });
         }
     }
 }

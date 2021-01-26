@@ -30,7 +30,7 @@ export default class AutenticationController {
 
             return response.status(200).json({ user, token })
         } catch (error) {
-            return response.json({ message: error || "ERRO"})
+            return response.status(400).json({ message: error || "ERRO"})
         }
     }
 

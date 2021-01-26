@@ -8,9 +8,9 @@ export default class ExerciceController {
         try {
             const exerciceList: ExerciceInterface[] = await knex('exercice').select('*');
 
-            return response.json(exerciceList);
+            return response.status(200).json(exerciceList);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -19,9 +19,9 @@ export default class ExerciceController {
             const { id } = request.params;
             const exercice: ExerciceInterface = await knex('exercice').where('id', id).select('*').first();
 
-            return response.json(exercice);
+            return response.status(200).json(exercice);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -30,9 +30,9 @@ export default class ExerciceController {
             const { name } = request.query;
             const exercices: ExerciceInterface[] = await knex('exercice').where('name', 'like', `%${name}%`).select('*');
 
-            return response.json(exercices);
+            return response.status(200).json(exercices);
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -48,27 +48,29 @@ export default class ExerciceController {
             const newExerciceId = await trx('exercice').insert(data);
             await trx.commit();
 
-            return response.json({ 
+            return response.status(200).json({ 
                 newExerciceId: newExerciceId[0],
                 message: `Exercicio : ${data.name} criado com sucesso` 
             })
         } catch (error) {
             await trx.commit();
-            return response.status(500).json({ message: error || "Erro" });
+            return response.status(400).json({ message: error || "Erro" });
         }
     }
 
     async update(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
         try {
             const data: ExerciceInterface = request.body;
 
-            const trx = await knex.transaction();
             await trx('exercice').where('id', data.id).update(data);
             await trx.commit();
 
-            return response.json({ message: `Exercicio : ${data.name} atualizado com sucesso` })
+            return response.status(200).json({ message: `Exercicio : ${data.name} atualizado com sucesso` })
         } catch (error) {
-            return response.json({ message: error });
+            await trx.commit();
+            return response.status(400).json({ message: error });
         }
     }
 
@@ -77,9 +79,9 @@ export default class ExerciceController {
             const { id } = request.params;
 
             await knex('exercice').where('id', id).delete();
-            return response.json({ message: `Exercicio removido com sucesso` })
+            return response.status(200).json({ message: `Exercicio removido com sucesso` })
         } catch (error) {
-            return response.json({ message: error });
+            return response.status(400).json({ message: error });
         }
     }
 }
