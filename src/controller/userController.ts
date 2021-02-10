@@ -134,4 +134,18 @@ export default class UserController {
         }
     }
 
+    async reprove(request: Request, response: Response) {
+        try {
+            const { id } = request.params;
+
+            await knex('user_weight').where('userId', id).delete();
+            await knex('user_payment').where('userId', id).delete();
+            await knex('menu_user').where('userId', id).delete();
+            await knex('user').where('id', id).delete();
+            return response.status(200).json({ message: `Usuário removido com sucesso` })
+        } catch (error) {
+            return response.status(400).json({ message: error });
+        }
+    }
+
 }

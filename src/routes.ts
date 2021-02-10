@@ -52,6 +52,7 @@ routes.put('/user', userController.update);
 routes.get('/user', userController.getAll);
 routes.get('/user/:id', userController.getById);
 routes.delete('/user/:id', userController.remove);
+routes.delete('/user/reprove/:id', userController.reprove);
 
 //MENU
 routes.get('/menu/:id', menuController.getById);
@@ -71,6 +72,7 @@ routes.post('/menuUser', menuUserController.create);
 routes.get('/menuUser/:userId', menuUserController.getByUserId);
 routes.post('/menuUser/menuItemImage', menuUserController.createImageItem);
 routes.put('/menuUser/menuItemImage', menuUserController.updateRatingItem);
+routes.delete('/menuUser/removeByUserId/:userId', menuUserController.removeByUserId);
 
 //EXERCICE
 routes.get('/exercice', exerciceController.getAll);

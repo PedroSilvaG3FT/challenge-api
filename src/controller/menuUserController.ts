@@ -14,6 +14,7 @@ export default class MenuUserController {
     async getByUserId(request: Request, response: Response) {
         try {
             const { userId } = request.params;
+
             const menuUser = await knex('menu_user')
                 .where('userId', userId)
                 .where('active', true)
@@ -96,6 +97,7 @@ export default class MenuUserController {
             const data: MenuUserInterface = request.body;
 
             const allMenuUser = await trx('menu_user').where('userId', data.userId).select('*');
+            await trx('menu_user_item_image').where('userId', data.userId).delete();
 
             if (allMenuUser.length >= 1) {
                 await trx('menu_user').where('userId', data.userId).update({ active: false });
@@ -158,6 +160,23 @@ export default class MenuUserController {
             await trx.commit();
 
             return response.status(200).json({ message: "Item atualizado com sucesso" });
+        } catch (error) {
+            await trx.commit();
+            return response.status(400).json({ message: "DEU RUIM" });
+        }
+    }
+
+    async removeByUserId(request: Request, response: Response) {
+        const trx = await knex.transaction();
+
+        try {
+            const { userId } = request.params;
+            await trx('menu_user_item_image').where('userId', userId).delete();
+            await trx('menu_user').where('userId', userId).update({ active: false });
+
+            await trx.commit();
+
+            return response.status(200).json({ message: "Cardapio removido com sucesso" });
         } catch (error) {
             await trx.commit();
             return response.status(400).json({ message: "DEU RUIM" });
