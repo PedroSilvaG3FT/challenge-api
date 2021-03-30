@@ -76,7 +76,8 @@ export default class MenuUserController {
                             descripition: meal.descripition,
                             menuUserItemImageId: itemImage?.id,
                             imageItem: itemImage?.image,
-                            rating: itemImage?.rating ? String(itemImage?.rating) : null
+                            rating: itemImage?.rating ? String(itemImage?.rating) : null,
+                            feedback: itemImage?.feedback || ""
                         } as MealInterface
 
                         itemDay.meals.push(newMeal)
@@ -152,17 +153,20 @@ export default class MenuUserController {
 
         try {
             const data: any = request.body;
+            const id = data.menuUserItemImageId;
+
+            delete data['menuUserItemImageId']
 
             await trx('menu_user_item_image')
-                .where('id', data.menuUserItemImageId)
-                .update({ rating: Number(data.rating) })
+                .where('id', id)
+                .update(data)
 
             await trx.commit();
 
             return response.status(200).json({ message: "Item atualizado com sucesso" });
         } catch (error) {
             await trx.commit();
-            return response.status(400).json({ message: "DEU RUIM" });
+            return response.status(400).json({ message: error });
         }
     }
 

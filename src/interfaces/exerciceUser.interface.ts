@@ -4,8 +4,10 @@ export interface ExerciceUserInterfaceDTO {
     days: {
         dayId: number,
         exercices: {
-            amount: number,
-            exercice: number
+            amount: string,
+            linkUrl: string,
+            isLink?: boolean,
+            exercice: number,
         }[]
 
     }[]
@@ -20,7 +22,9 @@ export interface DayExerciceMemberInterface {
 
 export interface ItemExerciceMemberInterface {
     id?: number,
-    amount: number,
+    amount: string,
+    linkUrl?: string,
+    isLink?: boolean,
     exercice?: {
         id: number,
         name: string,

@@ -12,7 +12,8 @@ export interface MenuItemInterface {
     descripition: string,
     dateCreation: Date,
     imageItem: string,
-    rating: number
+    rating: number,
+    feedback?: string,
 }
 export interface MenuItemDayInterface {
     id?: number,
@@ -31,7 +32,8 @@ export interface MealInterface {
 
     menuUserItemImageId?: number,
     imageItem?: string,
-    rating?: number | string
+    rating?: number | string,
+    feedback?: string,
 }
 
 export interface MenuInterfaceDTO {

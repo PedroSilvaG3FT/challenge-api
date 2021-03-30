@@ -14,10 +14,10 @@ export default class ExerciceUserController {
             const exerciceUserDayItems = await
                 knex("exercice_user_day_item")
                     .select('*')
-                    .join("exercice", "exercice_user_day_item.exerciceId", "exercice.id")
+                    .leftJoin("exercice", "exercice_user_day_item.exerciceId", "exercice.id")
                     .select("name")
                     .where("userId", userId)
-
+            
             const numberDays = exerciceUserDays.map(itemDay => itemDay.numberDay);
             const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
@@ -43,6 +43,8 @@ export default class ExerciceUserController {
                     if (exerciceItem.numberDay === itemDay.numberDay) {
                         const newExerciceItem: ItemExerciceMemberInterface = {
                             amount: exerciceItem.amount,
+                            linkUrl: exerciceItem.linkUrl,
+                            isLink: exerciceItem.linkUrl ? true : false,
                             exercice: {
                                 id: exerciceItem.exerciceId,
                                 name: exerciceItem.name
@@ -104,12 +106,14 @@ export default class ExerciceUserController {
                         dayId: day.dayId,
                         exerciceId: exercice.exercice,
                         numberDay: index + 1,
-                        amount: exercice.amount
+                        amount: exercice.amount,
+                        linkUrl: exercice.linkUrl,
                     }
 
                     const insertedDay = await trx('exercice_user_day').insert(newExerciceDay);
                     newExerciceItem.exerciceUserDayId = insertedDay[0];
 
+                    console.log(newExerciceItem)
                     await trx('exercice_user_day_item').insert(newExerciceItem);
                     await trx.commit();
                 })

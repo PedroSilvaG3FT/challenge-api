@@ -7,6 +7,7 @@ export async function up(knex: Knex) {
         table.integer('userId').unsigned().references('id').inTable('user').notNullable();
         table.integer('menuItemId').unsigned().references('id').inTable('menu_item').notNullable();
         table.integer('rating');
+        table.string('feedback', 200);
         table.string('image', VARCHAR_MAX);
         table.dateTime('dateCreation').notNullable();
     });
