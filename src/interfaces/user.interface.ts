@@ -20,4 +20,6 @@ export interface UserInterface {
     dateCreation: Date;
 
     currentWeight?: number;
+    accessCode?: string;
+    dateApproval?: Date;
 }

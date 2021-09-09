@@ -34,4 +34,22 @@ export default class AutenticationController {
         }
     }
 
+    async userAuthAccessCode(request: Request, response: Response) {
+        try {
+            const { accessCode } = request.body;
+
+            const user: UserInterface = await knex('user')
+                .where('accessCode', accessCode)
+                .select('*')
+                .first();
+
+            if (!user) return response.status(400).json({message:"Usuário não encontrado na base"});
+
+            const token = jwt.sign({ id: user.id }, AUTH_CONFIG.secret, { expiresIn: AUTH_CONFIG.expiresIn });
+
+            return response.status(200).json({ user, token })
+        } catch (error) {
+            return response.status(400).json({ message: error || "ERRO"})
+        }
+    }
 }

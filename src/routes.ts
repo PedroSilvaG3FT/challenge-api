@@ -38,6 +38,7 @@ routes.get('/', (request, response) => response.send("Challenge 90 Start"));
 
 //AUTH 
 routes.post('/autentication', autenticationController.userAuth);
+routes.post('/autentication-accessCode', autenticationController.userAuthAccessCode);
 routes.post('/user', userController.create);
 routes.get('/user/email/:email', userController.getByEmail);
 
@@ -53,6 +54,7 @@ routes.get('/user', userController.getAll);
 routes.get('/user/:id', userController.getById);
 routes.delete('/user/:id', userController.remove);
 routes.delete('/user/reprove/:id', userController.reprove);
+routes.put('/user/change-password', userController.updatePassword);
 
 //MENU
 routes.get('/menu/:id', menuController.getById);

@@ -113,7 +113,6 @@ export default class ExerciceUserController {
                     const insertedDay = await trx('exercice_user_day').insert(newExerciceDay);
                     newExerciceItem.exerciceUserDayId = insertedDay[0];
 
-                    console.log(newExerciceItem)
                     await trx('exercice_user_day_item').insert(newExerciceItem);
                     await trx.commit();
                 })

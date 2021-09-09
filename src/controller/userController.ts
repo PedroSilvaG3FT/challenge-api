@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { UserInterface } from "../interfaces/user.interface";
 import { UserWeightInterface } from "../interfaces/userWeight.interface";
 import { _decrypt, _encrypt, _hash, _verify } from "../shared/cryptoHelper/cryptoHelper";
+import { genereteAccessCode } from "../helper/accessCode.helper";
 
 export default class UserController {
     constructor() { }
@@ -81,6 +82,7 @@ export default class UserController {
             }
 
             data.dateCreation = new Date();
+            data.accessCode = genereteAccessCode(6)
             data.active = data.isAdm ? true : false;
             data.isAdm = data.isAdm ? data.isAdm : false;
             
@@ -100,6 +102,22 @@ export default class UserController {
             await trx.commit();
 
             return response.status(200).json({ message: `Usuário : ${data.name} criado com sucesso` })
+        } catch (error) {
+            await trx.commit();
+            return response.status(400).json({ message: error || "Erro" });
+        }
+    }
+
+    async updatePassword(request: Request, response: Response) {
+        const trx = await knex.transaction();
+        try {
+            const data: { password: string, userId: number } = request.body;
+            const hash = await _hash(data.password);
+
+            await trx('user').where('id', data.userId).update({ password: hash });
+            await trx.commit();
+
+            return response.status(200).json({ message: `Senha Alterada com sucesso !` })
         } catch (error) {
             await trx.commit();
             return response.status(400).json({ message: error || "Erro" });

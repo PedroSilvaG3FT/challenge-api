@@ -18,10 +18,12 @@ export async function up(knex: Knex) {
         table.integer('payday');
         table.integer('paymentId');
         table.boolean('isAdm');
+        table.string('accessCode')
         table.string('image', VARCHAR_MAX);
         table.boolean('acceptTerm');
         table.boolean('active').notNullable();
         table.dateTime('dateCreation').notNullable();
+        table.dateTime('dateApproval');
     });
 }
 
