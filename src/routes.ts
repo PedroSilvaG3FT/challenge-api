@@ -13,9 +13,11 @@ import PaymentController from './controller/paymentController';
 import BankAccountController from './controller/bankAccountController';
 import UserPaymentController from './controller/userPaymentController';
 import AvatarController from './controller/avatarController';
+import HelperController from './controller/helperController'
 
 const routes = express.Router();
 
+const helperController = new HelperController()
 const autenticationController = new AutenticationController();
 const userController = new UserController();
 
@@ -35,6 +37,10 @@ const userPaymentController = new UserPaymentController();
 const avatarController = new AvatarController();
 
 routes.get('/', (request, response) => response.send("Challenge 90 Start"));
+
+// HELPER
+routes.put('/update-access-code', helperController.updateAllAccessCode);
+routes.put('/update-date-approve', helperController.updateAllDateApprove);
 
 //AUTH 
 routes.post('/autentication', autenticationController.userAuth);
