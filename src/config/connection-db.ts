@@ -11,10 +11,10 @@ export const CONNECTION_DB = {
 export const CONNECTION_DB_DEV = {
     client: 'mysql',
     connection: {
-        host: 'mysql742.umbler.com',
-        port: '41890',
-        user: 'challenge-dev',
+        host: 'sql566.main-hosting.eu',
+        port: '3306',
+        user: 'u371677739_sa',
         password: 'Laranja10',
-        database: 'challenge-bd-dev'
+        database: 'u371677739_challengeBD'
     }
 }
