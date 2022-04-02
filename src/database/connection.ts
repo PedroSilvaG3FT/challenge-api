@@ -3,6 +3,6 @@ import { CONNECTION_DB, CONNECTION_DB_DEV } from "../config/connection-db";
 
 const CONFIG_DB = process.env.IS_PRODUCTION ? CONNECTION_DB : CONNECTION_DB_DEV;
 
-const connection = knex({ ...CONFIG_DB });
+const connection = knex({ ...CONNECTION_DB });
 
 export default connection;
