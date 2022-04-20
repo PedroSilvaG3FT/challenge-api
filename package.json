@@ -9,8 +9,8 @@
   },
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
-    "publish": "git push umbler master",
-    "build": "tsc && npm run knex:migrate",
+    "publish": "git push heroku master",
+    "build": "tsc",
     "start": "npm run build && node dist/src/server.js",
     "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest"
