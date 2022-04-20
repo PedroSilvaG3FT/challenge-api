@@ -1,5 +1,4 @@
 import express from "express";
-
 import AutenticationController from "./controller/autenticationController";
 import MenuController from "./controller/menuController";
 import UserController from "./controller/userController";
@@ -36,7 +35,7 @@ const userPaymentController = new UserPaymentController();
 
 const avatarController = new AvatarController();
 
-routes.get("/", (request, response) => response.send("Challenge 90 Start"));
+routes.get("/", (request, response) => response.send("Challenge 90 Start 1.1"));
 
 // HELPER
 routes.put("/update-access-code", helperController.updateAllAccessCode);
