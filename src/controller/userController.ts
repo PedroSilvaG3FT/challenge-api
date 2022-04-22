@@ -9,6 +9,7 @@ import {
   _verify,
 } from "../shared/cryptoHelper/cryptoHelper";
 import { genereteAccessCode } from "../helper/accessCode.helper";
+import { UserTypeEnum } from "../shared/enums/userType.enum";
 
 export default class UserController {
   constructor() {}
@@ -97,6 +98,7 @@ export default class UserController {
       }
 
       data.dateCreation = new Date();
+      data.type = UserTypeEnum.challenge;
       data.accessCode = genereteAccessCode(6);
       data.active = data.isAdm ? true : false;
       data.isAdm = data.isAdm ? data.isAdm : false;
@@ -182,6 +184,9 @@ export default class UserController {
       await knex("user_weight").where("userId", id).delete();
       await knex("user_payment").where("userId", id).delete();
       await knex("menu_user").where("userId", id).delete();
+      await knex("exercice_user_day_item").where("userId", id).delete();
+      await knex("exercice_user_day").where("userId", id).delete();
+
       await knex("user").where("id", id).delete();
       return response
         .status(200)
