@@ -6,6 +6,7 @@ import {
   DayExerciceMemberInterface,
   ItemExerciceMemberInterface,
 } from "../interfaces/exerciceUser.interface";
+import { UserInterface } from "../interfaces/user.interface";
 
 export default class ExerciceUserController {
   constructor() {}
@@ -26,14 +27,16 @@ export default class ExerciceUserController {
         .select("name")
         .where("userId", userId);
 
-      const numberDays = exerciceUserDays.map((itemDay) => itemDay.numberDay);
+      const numberDays = exerciceUserDays.map(
+        (itemDay: any) => itemDay.numberDay
+      );
       const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
       const exercicesUser: DayExerciceMemberInterface[] = [];
 
       numberDayFilter.forEach((numberDay) => {
         const day = exerciceUserDays.filter(
-          (itemDay) => itemDay.numberDay === numberDay
+          (itemDay: any) => itemDay.numberDay === numberDay
         )[0];
 
         const newDay: DayExerciceMemberInterface = {
@@ -48,10 +51,10 @@ export default class ExerciceUserController {
 
       exercicesUser.forEach((itemDay) => {
         const exercicesDay = exerciceUserDayItems.filter(
-          (x) => itemDay.numberDay === x.numberDay
+          (x: any) => itemDay.numberDay === x.numberDay
         );
 
-        exercicesDay.forEach((exerciceItem) => {
+        exercicesDay.forEach((exerciceItem: any) => {
           if (exerciceItem.numberDay === itemDay.numberDay) {
             const newExerciceItem: ItemExerciceMemberInterface = {
               amount: exerciceItem.amount,
@@ -147,6 +150,61 @@ export default class ExerciceUserController {
       const payload: { usersId: number[]; days: any[] } = request.body;
 
       for (let userId of payload.usersId) {
+        await knex("exercice_user_day_item").where("userId", userId).delete();
+        await knex("exercice_user_day").where("userId", userId).delete();
+
+        payload.days.forEach(async (day, index: number) => {
+          const newExerciceDay = {
+            userId,
+            active: true,
+            dayId: day.dayId,
+            numberDay: index + 1,
+            dateCreation: new Date(),
+          };
+
+          if (!day.exercices.length) {
+            await knex("exercice_user_day").insert(newExerciceDay);
+            return;
+          }
+
+          day.exercices.forEach(async (exercice: any) => {
+            const newExerciceItem = {
+              userId,
+              dayId: day.dayId,
+              numberDay: index + 1,
+              exerciceUserDayId: 0,
+              amount: exercice.amount,
+              linkUrl: exercice.linkUrl,
+              exerciceId: exercice.exercice,
+            };
+
+            const [id] = await knex("exercice_user_day").insert(newExerciceDay);
+
+            newExerciceItem.exerciceUserDayId = id;
+
+            await knex("exercice_user_day_item").insert(newExerciceItem);
+          });
+        });
+      }
+
+      return response
+        .status(200)
+        .json({ message: "Exercicios cadastrados com sucesso" });
+    } catch (error) {
+      return response.status(400).json({ message: error || "ERRO" });
+    }
+  }
+
+  async assignToAllMembers(request: Request, response: Response) {
+    try {
+      const payload: { userType: number; days: any[] } = request.body;
+
+      const members: UserInterface[] = await knex("user")
+        .where("type", String(payload.userType))
+        .where("active", true)
+        .select("id");
+
+      for await (const { id: userId } of members) {
         await knex("exercice_user_day_item").where("userId", userId).delete();
         await knex("exercice_user_day").where("userId", userId).delete();
 

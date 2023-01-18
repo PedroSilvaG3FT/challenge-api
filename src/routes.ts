@@ -100,6 +100,7 @@ routes.delete("/exercice/:id", exerciceController.remove);
 //EXERCICE_USER
 routes.post("/exerciceUser", exerciceUserController.create);
 routes.post("/assignExercice", exerciceUserController.assignToMembers);
+routes.post("/assignExercice/all", exerciceUserController.assignToAllMembers);
 routes.get("/exerciceUser/:userId", exerciceUserController.getByUserId);
 routes.delete(
   "/exerciceUser/:userId",
