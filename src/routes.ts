@@ -81,6 +81,7 @@ routes.delete("/menuItem/:id", menuItemController.delete);
 routes.post("/menuUser", menuUserController.create);
 routes.get("/menuUser/:userId", menuUserController.getByUserId);
 routes.post("/menuUser/assign", menuUserController.assignMenuToMembers);
+routes.post("/menuUser/assign/all", menuUserController.assignMenuToAllMembers);
 routes.post("/menuUser/menuItemImage", menuUserController.createImageItem);
 routes.put("/menuUser/menuItemImage", menuUserController.updateRatingItem);
 routes.delete(

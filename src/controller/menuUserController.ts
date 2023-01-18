@@ -9,6 +9,8 @@ import { TypeMealEnum } from "../shared/enums/typeMeal.enum";
 import { DayEnum } from "../shared/enums/day.enum";
 import { uploadImageStorage } from "../firebase/storage-service";
 import { PATH_STORAGE } from "../firebase/firebase-constants";
+import { UserInterface } from "../interfaces/user.interface";
+import { APP_TIMEOUT } from "../shared/constants/timeout.constant";
 
 export default class MenuUserController {
   constructor() {}
@@ -40,7 +42,7 @@ export default class MenuUserController {
         .where("userId", userId)
         .select("*");
 
-      const numberDays = menuItemDay.map((itemDay) => itemDay.numberDay);
+      const numberDays = menuItemDay.map((itemDay: any) => itemDay.numberDay);
       const numberDayFilter = Array.from(new Set(numberDays)).sort();
 
       const menuMemberDTO: MemberMenuInterface = {
@@ -53,7 +55,7 @@ export default class MenuUserController {
 
       numberDayFilter.forEach((numberDay) => {
         const day = menuItemDay.filter(
-          (itemDay) => itemDay.numberDay === numberDay
+          (itemDay: any) => itemDay.numberDay === numberDay
         )[0];
         const newDay = {
           dayId: day.dayId,
@@ -67,16 +69,16 @@ export default class MenuUserController {
 
       menuMemberDTO.days.forEach((itemDay) => {
         const mealsDay = menuItemDay.filter(
-          (x) => itemDay.numberDay === x.numberDay
+          (x: any) => itemDay.numberDay === x.numberDay
         );
 
-        mealsDay.forEach((mealtem) => {
+        mealsDay.forEach((mealtem: any) => {
           if (itemDay.numberDay === mealtem.numberDay) {
             const meal = menuItem.find(
-              (item) => item.id === mealtem.menuItemId
+              (item: any) => item.id === mealtem.menuItemId
             ) as any;
             const itemImage = menuUserItemImage.find(
-              (item) => item.menuItemId === mealtem.menuItemId
+              (item: any) => item.menuItemId === mealtem.menuItemId
             ) as any;
 
             const newMeal = {
@@ -215,16 +217,17 @@ export default class MenuUserController {
       for await (const userId of members) {
         const data = { menuId, userId } as MenuUserInterface;
 
-        const allMenuUser = await trx("menu_user")
-          .where("userId", data.userId)
-          .select("*");
-        await trx("menu_user_item_image").where("userId", data.userId).delete();
+        const [{ count: countMenuUser }] = await trx("menu_user")
+          .where("userId", userId)
+          .where("active", true)
+          .count({ count: "*" });
 
-        if (allMenuUser.length >= 1) {
+        await trx("menu_user_item_image").where("userId", userId).delete();
+
+        if (countMenuUser)
           await trx("menu_user")
-            .where("userId", data.userId)
+            .where("userId", userId)
             .update({ active: false });
-        }
 
         data.active = true;
         data.dateCreation = new Date();
@@ -236,6 +239,50 @@ export default class MenuUserController {
       return response
         .status(200)
         .json({ message: "Menu Atribuido com sucesso" });
+    } catch (error) {
+      await trx.commit();
+      return response.status(400).json({ message: "DEU RUIM" });
+    }
+  }
+
+  async assignMenuToAllMembers(request: Request, response: Response) {
+    request.setTimeout(APP_TIMEOUT);
+
+    const trx = await knex.transaction();
+
+    try {
+      const { menuId, userType } = request.body;
+
+      const members: UserInterface[] = await knex("user")
+        .where("type", String(userType))
+        .where("active", true)
+        .select("id");
+
+      for await (const { id: userId } of members) {
+        const data = { menuId, userId } as MenuUserInterface;
+
+        const [{ count: countMenuUser }] = await trx("menu_user")
+          .where("userId", userId)
+          .where("active", true)
+          .count({ count: "*" });
+
+        await trx("menu_user_item_image").where("userId", userId).delete();
+
+        if (countMenuUser)
+          await trx("menu_user")
+            .where("userId", userId)
+            .update({ active: false });
+
+        data.active = true;
+        data.dateCreation = new Date();
+
+        await trx("menu_user").insert(data);
+      }
+
+      await trx.commit();
+      return response
+        .status(200)
+        .json({ members, message: "Menu Atribuido com sucesso" });
     } catch (error) {
       await trx.commit();
       return response.status(400).json({ message: "DEU RUIM" });
